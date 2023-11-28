@@ -1,0 +1,1 @@
+export const TRN_PERIOD_START = '2023-11-13_00:00';
