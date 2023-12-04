@@ -8,8 +8,7 @@ In this project, you'll build an automated VPC structure and an Elastic Kubernet
 
 ### Diagram of communication between repositories
 
-![Alt text](image.png)
-
+![image](https://github.com/atre/trn-aws/assets/37833861/a604bb10-718e-4f90-bee3-aca3bc2f5035)
 
 ### Skills Focus
 
