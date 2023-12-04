@@ -1,6 +1,6 @@
 import { BudgetsBudget, BudgetsBudgetConfig } from '@cdktf/provider-aws/lib/budgets-budget';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
-import { TerraformStack } from 'cdktf';
+import { S3Backend, TerraformStack } from 'cdktf';
 import { Construct } from 'constructs';
 import { TRN_PERIOD_START } from './constant';
 import { BudgetConfig } from './interface';
@@ -12,6 +12,13 @@ export class Budget extends TerraformStack {
 
     new AwsProvider(this, 'aws', {
       region: config.REGION,
+    });
+
+    new S3Backend(this, {
+      bucket: config.REMOTE_BACKEND_NAME,
+      key: 'dev/stacks/budget/terraform.tfstate',
+      region: config.REGION,
+      dynamodbTable: config.REMOTE_BACKEND_LOCK_NAME,
     });
 
     new BudgetsBudget(this, 'budget', {
