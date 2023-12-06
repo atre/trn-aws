@@ -6,12 +6,13 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
     "get": "cdktf get",
     "build": "tsc",
     "synth": "cdktf synth",
     "compile": "tsc --pretty",
     "lint": "eslint . --ext .ts",
-    "format": "eslint . --ext .ts --fix",
+    "lint:fix": "eslint . --ext .ts --fix",
     "watch": "tsc -w",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -27,6 +28,7 @@
     "cdktf": "^0.19.1",
     "constructs": "^10.3.0",
     "dotenv": "^16.3.1",
+    "husky": "^8.0.3",
     "trn-components": "file:../trn-components"
   },
   "devDependencies": {

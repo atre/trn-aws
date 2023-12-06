@@ -23,8 +23,9 @@ new Budget(app, 'budget', {
 const vpc = new Vpc(app, 'vpc');
 
 new Eks(app, 'eks', {
-  vpcId: vpc.vpcInstance.vpcId,
-  privateSubnetIds: vpc.vpcInstance.privateSubnets,
-});
+  tags: {
+    Name: 'eks-cluster',
+  },
+}).dependsOn(vpc);
 
 app.synth();
