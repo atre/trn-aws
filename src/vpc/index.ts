@@ -2,7 +2,7 @@ import { DataAwsAvailabilityZones } from '@cdktf/provider-aws/lib/data-aws-avail
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { S3Backend, TerraformStack } from 'cdktf';
 import { Construct } from 'constructs';
-import { VpcConstruct } from 'trn-components/lib/aws/vpc';
+import { VpcConstruct } from 'trn-components';
 import { PRIVATE_SUBNETS, PUBLIC_SUBNETS } from './constant';
 import { config } from '../../config';
 

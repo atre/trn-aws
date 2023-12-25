@@ -1,7 +1,10 @@
 import { App } from 'cdktf';
 import { config } from './config';
 import { Budget } from './src/budget';
+import { ElasticContainerRegistry } from './src/ecr';
 import { Eks } from './src/eks';
+import { MentorIAMUserStack } from './src/iam';
+import { NodeGroupStack } from './src/node-group';
 import { RemoteBackend } from './src/remote-backend';
 import { Vpc } from './src/vpc';
 
@@ -20,12 +23,27 @@ new Budget(app, 'budget', {
   subscriberEmailAddresses: config.SUBSCRIBER_EMAIL_ADDRESSES.split(','),
 });
 
-const vpc = new Vpc(app, 'vpc');
+new Vpc(app, 'vpc');
 
 new Eks(app, 'eks', {
+  name: 'eks-cluster',
   tags: {
-    Name: 'eks-cluster',
+    'kubernetes.io/cluster/eks-cluster': 'shared',
   },
-}).dependsOn(vpc);
+});
+
+new NodeGroupStack(app, 'node-group', {
+  name: 'eks-node-group',
+  clusterName: 'eks-cluster',
+});
+
+new MentorIAMUserStack(app, 'mentor-iam-user');
+
+new ElasticContainerRegistry(app, 'ecr', {
+  name: 'trn-ecr',
+  tags: {
+    'kubernetes.io/cluster/eks-cluster': 'shared',
+  },
+});
 
 app.synth();

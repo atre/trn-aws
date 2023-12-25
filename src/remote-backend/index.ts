@@ -3,7 +3,7 @@ import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { S3BucketConfig } from '@cdktf/provider-aws/lib/s3-bucket';
 import { TerraformStack } from 'cdktf';
 import { Construct } from 'constructs';
-import { RemoteBackendConstruct } from 'trn-components/lib/aws/remote-backend';
+import { RemoteBackendConstruct } from 'trn-components';
 
 import { config } from '../../config';
 
