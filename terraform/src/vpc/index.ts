@@ -5,12 +5,15 @@ import { Construct } from 'constructs';
 import { VpcConstruct } from 'trn-components';
 import { PRIVATE_SUBNETS, PUBLIC_SUBNETS } from './constant';
 import { config } from '../../config';
+import { VpcStackProps } from './interface';
 
 export class Vpc extends TerraformStack {
   public readonly vpcInstance: VpcConstruct;
 
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: VpcStackProps) {
     super(scope, id);
+
+    const { clusterName } = props;
 
     new AwsProvider(this, 'aws', {
       region: config.REGION,
@@ -38,14 +41,14 @@ export class Vpc extends TerraformStack {
       publicSubnets: PUBLIC_SUBNETS,
       privateSubnets: PRIVATE_SUBNETS,
       tags: {
-        ['kubernetes.io/cluster/kubernetes']: 'shared',
+        [`kubernetes.io/cluster/${clusterName}`]: 'shared',
       },
       publicSubnetTags: {
-        ['kubernetes.io/cluster/kubernetes']: 'shared',
+        [`kubernetes.io/cluster/${clusterName}`]: 'shared',
         'kubernetes.io/role/elb': '1',
       },
       privateSubnetTags: {
-        ['kubernetes.io/cluster/kubernetes']: 'shared',
+        [`kubernetes.io/cluster/${clusterName}`]: 'shared',
         'kubernetes.io/role/internal-elb': '1',
       },
     });

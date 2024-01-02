@@ -17,7 +17,7 @@ export class ElasticContainerRegistry extends TerraformStack {
 
     new S3Backend(this, {
       bucket: config.REMOTE_BACKEND_NAME,
-      key: 'dev/stacks/ecr/terraform.tfstate',
+      key: `dev/stacks/${id}/terraform.tfstate`,
       region: config.REGION,
       dynamodbTable: config.REMOTE_BACKEND_LOCK_NAME,
     });

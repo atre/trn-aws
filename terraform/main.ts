@@ -7,6 +7,7 @@ import { MentorIAMUserStack } from './src/iam';
 import { NodeGroupStack } from './src/node-group';
 import { RemoteBackend } from './src/remote-backend';
 import { Vpc } from './src/vpc';
+import { Route53HostedZone } from './src/route53';
 
 const app = new App();
 
@@ -23,7 +24,9 @@ new Budget(app, 'budget', {
   subscriberEmailAddresses: config.SUBSCRIBER_EMAIL_ADDRESSES.split(','),
 });
 
-new Vpc(app, 'vpc');
+new Vpc(app, 'vpc', {
+  clusterName: 'eks-cluster',
+});
 
 new Eks(app, 'eks', {
   name: 'eks-cluster',
@@ -39,11 +42,26 @@ new NodeGroupStack(app, 'node-group', {
 
 new MentorIAMUserStack(app, 'mentor-iam-user');
 
-new ElasticContainerRegistry(app, 'ecr', {
-  name: 'trn-ecr',
-  tags: {
-    'kubernetes.io/cluster/eks-cluster': 'shared',
-  },
+// ECR Repositories
+// TODO find a way to manage this in a loop
+new ElasticContainerRegistry(app, 'ecr-management', {
+  name: 'trn-management-ecr',
+});
+new ElasticContainerRegistry(app, 'ecr-ui', {
+  name: 'trn-ui-ecr',
+});
+new ElasticContainerRegistry(app, 'ecr-entry', {
+  name: 'trn-entry-ecr',
+});
+new ElasticContainerRegistry(app, 'ecr-logic', {
+  name: 'trn-logic-ecr',
+});
+new ElasticContainerRegistry(app, 'ecr-storage', {
+  name: 'trn-storage-ecr',
+});
+
+new Route53HostedZone(app, 'public-hosted-zone', {
+  name: 'aws.catops.space'
 });
 
 app.synth();
