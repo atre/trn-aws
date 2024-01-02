@@ -1,17 +1,33 @@
-import { Construct } from 'constructs';
-import { App, Chart, ChartProps } from 'cdk8s';
-import { Management } from './lib/management';
-import { PostgresDatabase } from './lib/postgres';
-
-export class TRNApp extends Chart {
-  constructor(scope: Construct, id: string, props: ChartProps = { }) {
-    super(scope, id, props);
-
-    new PostgresDatabase(this, 'postgres-db');
-    new Management(this, 'management');
-  }
-}
+import { App } from 'cdk8s';
+import { TraefikChart } from './charts/traefik';
+import { PostgresChart } from './charts/postgres';
+import { UiChart } from './charts/ui';
+import { ManagementChart } from './charts/management';
+import { RedisChart } from './charts/redis';
+import { RabbitMQChart } from './charts/rabbitmq';
+import { EntryChart } from './charts/entry';
+import { LogicChart } from './charts/logic';
+import { StorageChart } from './charts/storage';
 
 const app = new App();
-new TRNApp(app, 'trn-cdk8s');
+
+// Network Ingress
+new TraefikChart(app, 'traefik');
+
+// DBs
+new PostgresChart(app, 'postgres');
+new RedisChart(app, 'redis');
+
+// Broker message
+new RabbitMQChart(app, 'rabbitmq');
+
+// Application
+new UiChart(app, 'ui');
+
+new ManagementChart(app, 'management');
+
+new EntryChart(app, 'entry');
+new LogicChart(app, 'logic');
+new StorageChart(app, 'storage');
+
 app.synth();

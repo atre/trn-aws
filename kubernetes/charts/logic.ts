@@ -1,0 +1,11 @@
+import { Chart, ChartProps } from "cdk8s";
+import { Construct } from "constructs";
+import { Logic } from "../lib/logic";
+
+export class LogicChart extends Chart {
+  constructor(scope: Construct, id: string, props: ChartProps = { }) {
+    super(scope, id, props);
+
+    new Logic(this, 'logic');
+  }
+}
