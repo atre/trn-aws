@@ -1,6 +1,5 @@
 import { Construct } from "constructs";
 import { IntOrString, KubeDeployment, KubeService } from "../../imports/k8s";
-import { IngressRoute, IngressRouteSpecRoutesKind, IngressRouteSpecRoutesServicesPort } from "../../imports/traefik.io";
 
 export class UI extends Construct {
   constructor(scope: Construct, id: string) {
@@ -60,27 +59,6 @@ export class UI extends Construct {
             ],
           },
         },
-      },
-    });
-
-    new IngressRoute(this, 'ui-ingress-route', {
-      metadata: {
-        name: 'ui-ingress-route',
-      },
-      spec: {
-        entryPoints: ['web'],
-        routes: [
-          {
-            match: 'PathPrefix(`/`)',
-            kind: IngressRouteSpecRoutesKind.RULE,
-            services: [
-              {
-                name: 'trn-ui-service',
-                port: IngressRouteSpecRoutesServicesPort.fromNumber(80),
-              },
-            ],
-          },
-        ],
       },
     });
   }

@@ -3,11 +3,12 @@ import { config } from './config';
 import { Budget } from './src/budget';
 import { ElasticContainerRegistry } from './src/ecr';
 import { Eks } from './src/eks';
-import { MentorIAMUserStack } from './src/iam';
+import { CertManagerIAMUserStack, MentorIAMUserStack } from './src/iam';
 import { NodeGroupStack } from './src/node-group';
 import { RemoteBackend } from './src/remote-backend';
 import { Vpc } from './src/vpc';
-import { Route53HostedZone } from './src/route53';
+import { Route53HostedZone } from './src/route53/hosted-zone';
+import { Route53RecordStack } from './src/route53/record';
 
 const app = new App();
 
@@ -62,6 +63,15 @@ new ElasticContainerRegistry(app, 'ecr-storage', {
 
 new Route53HostedZone(app, 'public-hosted-zone', {
   name: 'aws.catops.space'
+});
+
+new CertManagerIAMUserStack(app, 'cert-manager-iam-user', {
+  hostedZoneName: 'aws.catops.space'
+});
+
+new Route53RecordStack(app, 'route53-record', {
+  clusterName: 'eks-cluster',
+  hostedZoneName: 'aws.catops.space'
 });
 
 app.synth();

@@ -1,7 +1,6 @@
 import { Helm, Include } from 'cdk8s';
 import { Construct } from 'constructs/lib/construct';
 import { IngressRoute, IngressRouteSpecRoutesKind, IngressRouteSpecRoutesServicesPort } from '../../imports/traefik.io';
-import { IntOrString, KubeService } from '../../imports/k8s';
 
 export class Traefik extends Construct {
   constructor(scope: Construct, id: string) {
@@ -18,25 +17,22 @@ export class Traefik extends Construct {
     new Helm(this, 'traefik', {
       chart: 'traefik',
       repo: 'https://traefik.github.io/charts',
-    });
-
-    new KubeService(this, 'traefik-service', {
-      metadata: {
-        name: 'traefik',
-        annotations: {
-          'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+      values: {
+        web: {
+          redirectTo: {
+            port: 'websecure'
+          }
         },
-      },
-      spec: {
-        type: 'LoadBalancer',
-        ports: [
-          { name: 'web', port: 80, targetPort: IntOrString.fromNumber(80) },
-          { name: 'websecure', port: 443, targetPort: IntOrString.fromNumber(443) },
-        ],
-        selector: {
-          'app.kubernetes.io/name': 'traefik',
+        websecure: {
+          asDefault: true
         },
-      },
+        service: {
+          annotations: {
+            'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+          },
+        }
+      }
+    
     });
 
     new IngressRoute(this, 'management-ingress-route', {
@@ -44,8 +40,29 @@ export class Traefik extends Construct {
         name: 'management-ingress-route',
       },
       spec: {
-        entryPoints: ['web'],
+        tls: {
+          domains: [
+            {
+              main: 'aws.catops.space',
+            },
+            {
+              main: '*.aws.catops.space',
+            }
+          ],
+          secretName: 'tls-secret'
+        },
+        entryPoints: ['web', 'websecure'],
         routes: [
+          {
+            match: 'PathPrefix(`/`)',
+            kind: IngressRouteSpecRoutesKind.RULE,
+            services: [
+              {
+                name: 'trn-ui-service',
+                port: IngressRouteSpecRoutesServicesPort.fromNumber(80),
+              },
+            ],
+          },
           {
             match: 'PathPrefix(`/api/v1/auth`)',
             kind: IngressRouteSpecRoutesKind.RULE,

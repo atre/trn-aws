@@ -6,6 +6,7 @@ export const ConfigSchema = Type.Object({
   SUBSCRIBER_EMAIL_ADDRESSES: Type.String(),
   REMOTE_BACKEND_NAME: Type.String(),
   REMOTE_BACKEND_LOCK_NAME: Type.String(),
+  // GPG_KEY: Type.String(),
 });
 
 export type Config = Static<typeof ConfigSchema>

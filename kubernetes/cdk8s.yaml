@@ -4,3 +4,4 @@ imports:
   - k8s
   - https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
   - https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+  - https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.crds.yaml
