@@ -1,0 +1,53 @@
+name: Deploy CDK Code
+
+on:
+  push:
+    branches:
+      - feat/TRN-1-use-vpc-construct
+
+jobs:
+  deploy-manifests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Synthesize Terraform CDK Code
+        run: |
+          cd terraform
+          cdktf synth
+        working-directory: ./terraform
+
+      - name: Synthesize Kubernetes CDK Code
+        run: |
+          cd kubernetes
+          cdk8s synth
+        working-directory: ./kubernetes
+
+      - name: Use SSH Key for Authentication
+        run: |
+          echo "$DESTINATION_REPO_SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Clone Destination Repo
+        run: |
+          git clone git@github.com:dromix/cicd.git destination-repo
+
+      - name: Move Terraform CDK Code
+        run: |
+          cp -r terraform/cdktf.out/* destination-repo/terraform/
+        working-directory: ./destination-repo
+
+      - name: Move Kubernetes CDK Code
+        run: |
+          cp -r kubernetes/dist/* destination-repo/kubernetes/
+        working-directory: ./destination-repo
+
+      - name: Set Commit Name
+        run: |
+          cd destination-repo
+          git add .
+          git commit -m "${{ steps.commit.outputs.commit }}"
+        working-directory: ./destination-repo
+
