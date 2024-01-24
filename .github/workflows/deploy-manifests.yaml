@@ -27,6 +27,7 @@ jobs:
 
       - name: Use SSH Key for Authentication
         run: |
+          mkdir -p ~/.ssh
           echo "$DESTINATION_REPO_SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
