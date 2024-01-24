@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
       - name: Synthesize Kubernetes CDK Code
@@ -19,29 +19,22 @@ jobs:
           yarn install --frozen-lockfile
           yarn cdk8s synth
 
-      - name: Add SSH Key
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DESTINATION_REPO_SSH_KEY }}
-        run: |
-          eval "$(ssh-agent -s)"
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-        shell: bash
-
-      - name: Clone Destination Repo
-        run: |
-          git clone git@github.com:dromix/cicd.git destination-repo
+      - name: Checkout Destination Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'dromix/cicd'
+          ssh-key: ${{ secrets.DESTINATION_REPO_SSH_KEY }}
+          path: 'destination-repo'
 
       - name: Move Kubernetes CDK Code
         run: |
           cp -r kubernetes/dist/* destination-repo/kubernetes/
-        working-directory: ./destination-repo
 
-      - name: Set Commit Name
+      - name: Commit Changes
         run: |
           cd destination-repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add .
-          git commit -m "${{ steps.commit.outputs.commit }}"
-        working-directory: ./destination-repo
-
+          git commit -m "Update Kubernetes CDK code"
+          git push
