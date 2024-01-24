@@ -19,6 +19,12 @@ jobs:
           yarn install --frozen-lockfile
           yarn cdk8s synth
 
+      - name: Get Latest Commit Message from Source Repo
+        id: get_commit_message
+        run: |
+          commit_message=$(git log -1 --pretty=format:"%s")
+          echo "::set-output name=message::$commit_message"
+
       - name: Checkout Destination Repo
         uses: actions/checkout@v4
         with:
@@ -29,7 +35,7 @@ jobs:
       - name: Create Kubernetes Directory in Destination Repo
         run: |
           mkdir -p destination-repo/kubernetes/
-          
+
       - name: Move Kubernetes CDK Code
         run: |
           cp -r kubernetes/dist/* destination-repo/kubernetes/
@@ -40,5 +46,5 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Update Kubernetes CDK code"
+          git commit -m "${{ steps.get_commit_message.outputs.message }}"
           git push
