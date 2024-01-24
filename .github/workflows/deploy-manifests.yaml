@@ -19,12 +19,6 @@ jobs:
           yarn install --frozen-lockfile
           yarn cdk8s synth
 
-      - name: Get Latest Commit Message from Source Repo
-        id: get_commit_message
-        run: |
-          commit_message=$(git log -1 --pretty=format:"%s")
-          echo "::set-output name=message::$commit_message"
-
       - name: Get Committer Info from Source Repo
         run: |
           echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV

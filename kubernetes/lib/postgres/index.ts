@@ -11,7 +11,7 @@ export class PostgresDatabase extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const dbLabel = { app: "db" };
+    const dbLabel = { app: "db", test:'test' };
     const postgresPort = 5432;
     const exporterPort = 9187;
 
