@@ -38,7 +38,7 @@ jobs:
 
       - name: Move Kubernetes CDK Code
         run: |
-          cp -r kubernetes/dist/* destination-repo/kubernetes/
+          cp -rf kubernetes/dist/* destination-repo/kubernetes/
 
       - name: Commit Changes
         run: |
