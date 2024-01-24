@@ -5,7 +5,7 @@ export class Management extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const label = { app: "trn-management" };
+    const label = { app: "trn-management", test: 'test' };
     const serviceName = "trn-management-service";
     const servicePort = 8079;
 
