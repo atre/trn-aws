@@ -19,20 +19,15 @@ jobs:
           yarn install --frozen-lockfile
           yarn cdk8s synth
 
-      - name: Start SSH Agent
-        run: |
-          eval "$(ssh-agent -s)"
-
-      - name: Add SSH Key to Agent
+      - name: Add SSH Key
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DESTINATION_REPO_SSH_KEY }}
         run: |
-          echo "$SSH_PRIVATE_KEY" | ssh-add -
-
-      - name: Set up known_hosts
-        run: |
+          eval "$(ssh-agent -s)"
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
+        shell: bash
 
       - name: Clone Destination Repo
         run: |
