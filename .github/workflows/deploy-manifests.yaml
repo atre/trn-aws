@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        
+      - name: List Files in Current Directory
+        run: ls -la
 
       - name: Synthesize Terraform CDK Code
         run: |
