@@ -25,6 +25,14 @@ jobs:
           commit_message=$(git log -1 --pretty=format:"%s")
           echo "::set-output name=message::$commit_message"
 
+      - name: Get Committer Info from Source Repo
+        id: get_committer_info
+        run: |
+          committer_name=$(git log -1 --pretty=format:'%cn')
+          committer_email=$(git log -1 --pretty=format:'%ce')
+          echo "::set-output name=name::$committer_name"
+          echo "::set-output name=email::$committer_email"
+        
       - name: Checkout Destination Repo
         uses: actions/checkout@v4
         with:
@@ -43,8 +51,8 @@ jobs:
       - name: Commit Changes
         run: |
           cd destination-repo
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "${{ steps.get_committer_info.outputs.name }}"
+          git config user.email "${{ steps.get_committer_info.outputs.email }}"
           git add .
           if git diff --quiet; then
             echo "No changes to commit"
