@@ -5,15 +5,21 @@ export class UI extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const label = { app: "trn-ui" };
+    const label = { app: "ui" };
+    const nginxPort = 80;
+    const exporterPort = 9113;
 
     new KubeService(this, "ui-service", {
       metadata: {
         name: "trn-ui-service",
+        labels: label,
       },
       spec: {
         type: "ClusterIP",
-        ports: [{ port: 80, targetPort: IntOrString.fromNumber(80) }],
+        ports: [
+          { name: 'web', port: nginxPort, targetPort: IntOrString.fromNumber(nginxPort) },
+          { name: 'metrics', port: exporterPort, targetPort: IntOrString.fromNumber(exporterPort) }
+        ],
         selector: label,
       },
     });
@@ -36,7 +42,7 @@ export class UI extends Construct {
               {
                 name: "ui",
                 image: "894208094359.dkr.ecr.eu-central-1.amazonaws.com/trn-ui-ecr:0.2.0",
-                ports: [{ containerPort: 80 }],
+                ports: [{ containerPort: nginxPort }],
                 env: [
                   {
                     name: "MY_APP_MANAGEMENT_URL",
@@ -55,6 +61,12 @@ export class UI extends Construct {
                     valueFrom: { fieldRef: { fieldPath: "spec.nodeName" } }, // Adjust if necessary
                   },
                 ],
+              },
+              {
+                name: 'nginx-exporter',
+                image: 'nginx/nginx-prometheus-exporter:1.1.0',
+                args: ['-nginx.scrape-uri', 'http://localhost/basic_status'],
+                ports: [{ containerPort: exporterPort }],
               },
             ],
           },

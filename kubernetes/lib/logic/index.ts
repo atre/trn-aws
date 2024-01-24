@@ -41,6 +41,11 @@ export class Logic extends Construct {
                   { name: 'RABBIT_PORT', value: '5672' },
                 ],
               },
+              {
+                name: 'node-exporter',
+                image: 'prom/node-exporter:v1.1.2',
+                ports: [{ containerPort: 9100 }],
+              },
             ],
           },
         },
@@ -51,11 +56,13 @@ export class Logic extends Construct {
     new KubeService(this, 'logic-service', {
       metadata: {
         name: 'logic',
+        labels: label,
       },
       spec: {
         selector: label,
         ports: [
-          { name: 'http', port: 8085, targetPort: IntOrString.fromNumber(servicePort) },
+          { name: 'web', port: 8085, targetPort: IntOrString.fromNumber(servicePort) },
+          { name: 'metrics', port: 9100, targetPort:  IntOrString.fromNumber(9100) },
         ],
       },
     });

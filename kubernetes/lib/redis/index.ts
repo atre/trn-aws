@@ -6,6 +6,7 @@ export class Redis extends Construct {
     super(scope, id);
 
     const label = { app: 'redis' };
+    const exporterPort = 9121;
 
     new KubeDeployment(this, 'redis-deployment', {
       metadata: {
@@ -35,6 +36,17 @@ export class Redis extends Construct {
                   },
                 ],
               },
+              {
+                name: 'redis-exporter',
+                image: 'oliver006/redis_exporter:v1.56.0',
+                ports: [{ containerPort: exporterPort }],
+                env: [
+                  {
+                    name: 'REDIS_ADDR',
+                    value: 'localhost:6379',
+                  },
+                ],
+              }
             ],
             volumes: [
               {
@@ -50,11 +62,13 @@ export class Redis extends Construct {
     new KubeService(this, 'redis-service', {
       metadata: {
         name: 'redis',
+        labels: label,
       },
       spec: {
         selector: label,
         ports: [
           { name: 'redis', port: 6379, targetPort: IntOrString.fromNumber(6379) },
+          { name: 'metrics', port: exporterPort, targetPort: IntOrString.fromNumber(exporterPort) },
         ],
       },
     });

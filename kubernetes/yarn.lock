@@ -1254,14 +1254,14 @@ case@^1.6.3:
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
 
-cdk8s-cli@^2.198.28:
-  version "2.198.28"
-  resolved "https://registry.yarnpkg.com/cdk8s-cli/-/cdk8s-cli-2.198.28.tgz#d96aefa22441250808a0fb0874a0644e9de93ec4"
-  integrity sha512-LIyV9vwtGPt0hC3e/9CfwmTgnFdM1ohZmdcU7My5oTa6Zwpr0x4FcIZ7f73viZADrCM/sYUS2qfs1iLApUjYag==
+cdk8s-cli@^2.198.30:
+  version "2.198.30"
+  resolved "https://registry.yarnpkg.com/cdk8s-cli/-/cdk8s-cli-2.198.30.tgz#e92953383858ef5330dfe4060950d79fdead5fa1"
+  integrity sha512-K86oresg5YchPiuTJj+EiD4VVUfVWGX7z5zW7DoHEZjlmh55SXbYR0ALd3iDebrHsDfnUMNVEmeLPlq6C/Bm8Q==
   dependencies:
     "@types/node" "^16"
     ajv "^8.12.0"
-    cdk8s "^2.68.23"
+    cdk8s "^2.68.24"
     cdk8s-plus-25 "^2.22.68"
     codemaker "^1.93.0"
     colors "1.4.0"
@@ -1287,10 +1287,21 @@ cdk8s-plus-25@^2.22.68:
   optionalDependencies:
     backport "8.5.0"
 
-cdk8s@^2.68.21, cdk8s@^2.68.23:
+cdk8s@^2.68.21:
   version "2.68.23"
   resolved "https://registry.yarnpkg.com/cdk8s/-/cdk8s-2.68.23.tgz#6394fe56da982980a6ffdd926e6f1eb5ee461d4e"
   integrity sha512-ckLBVynhm7waLVd7iJXQoR3R9j57dc9bbTKuiUlHVBKa/YOVpVITHtMKUX0HnuQHFiKICTc1ZFVt7mm9CkJBtw==
+  dependencies:
+    fast-json-patch "^3.1.1"
+    follow-redirects "^1.15.2"
+    yaml "2.3.2"
+  optionalDependencies:
+    backport "8.5.0"
+
+cdk8s@^2.68.24:
+  version "2.68.24"
+  resolved "https://registry.yarnpkg.com/cdk8s/-/cdk8s-2.68.24.tgz#3f14e1f1466d7a36eb61cdf22cd3ca421269750d"
+  integrity sha512-XwXj6Gbvj/ljp5P2hLhD2p65ub1rF4B4bT87mNi+P5vnCFRO68DtxL4pQAaj0V0gwuMe6ImLrz4ld0kDq+Qe4A==
   dependencies:
     fast-json-patch "^3.1.1"
     follow-redirects "^1.15.2"
@@ -1735,6 +1746,11 @@ dotenv@^16.0.1:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
   integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
+
+dotenv@^16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.0.tgz#ac21c3fcaad2e7832a1cd0c0e4e8e52225ecda0e"
+  integrity sha512-WvImr5kpN5NGNn7KaDjJnLTh5rDVLZiDf/YLA8T1ZEZEBZNEDOE+mnkS0PVjPax8ZxBP5zC5SLMB3/9VV5de9g==
 
 downlevel-dts@^0.11.0:
   version "0.11.0"

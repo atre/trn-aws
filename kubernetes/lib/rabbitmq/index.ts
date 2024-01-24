@@ -6,6 +6,7 @@ export class RabbitMQ extends Construct {
     super(scope, id);
 
     const label = { app: 'rabbitmq' };
+    const exporterPort = 9419;
 
     new KubeDeployment(this, 'rabbitmq-deployment', {
       metadata: {
@@ -33,6 +34,24 @@ export class RabbitMQ extends Construct {
                   { name: 'RABBITMQ_DEFAULT_USER', value: 'user' },
                   { name: 'RABBITMQ_DEFAULT_PASS', value: 'password' },
                 ],
+                readinessProbe: {
+                  httpGet: {
+                    path: '/',
+                    port: IntOrString.fromNumber(15672),
+                  },
+                  initialDelaySeconds: 15,
+                  timeoutSeconds: 5,
+                },
+              },
+              {
+                name: 'rabbitmq-exporter',
+                image: 'ghcr.io/kbudde/rabbitmq_exporter:1.0.0-RC19',
+                env: [
+                  { name: 'RABBITMQ_URL', value: 'http://localhost:15672' },
+                  { name: 'RABBITMQ_USER', value: 'user' },
+                  { name: 'RABBITMQ_PASSWORD', value: 'password' },
+                ],
+                ports: [{ containerPort: exporterPort }],
               },
             ],
           },
@@ -43,12 +62,14 @@ export class RabbitMQ extends Construct {
     new KubeService(this, 'rabbitmq-service', {
       metadata: {
         name: 'rabbitmq',
+        labels: label,
       },
       spec: {
         selector: label,
         ports: [
           { name: 'amqp', port: 5672, targetPort: IntOrString.fromNumber(5672) },
           { name: 'management', port: 15672, targetPort: IntOrString.fromNumber(15672) },
+          { name: 'metrics', port: exporterPort, targetPort: IntOrString.fromNumber(exporterPort) },
         ],
       },
     });

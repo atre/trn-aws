@@ -38,6 +38,11 @@ export class Entry extends Construct {
                   { name: 'RABBIT_PORT', value: '5672' },
                 ],
               },
+              {
+                name: 'node-exporter',
+                image: 'prom/node-exporter:v1.1.2',
+                ports: [{ containerPort: 9100 }],
+              },
             ],
           },
         },
@@ -47,11 +52,13 @@ export class Entry extends Construct {
     new KubeService(this, 'entry-service', {
       metadata: {
         name: 'entry',
+        labels: label,
       },
       spec: {
         selector: label,
         ports: [
-          { name: 'http', port: 8080, targetPort: IntOrString.fromNumber(servicePort) },
+          { name: 'web', port: 8080, targetPort: IntOrString.fromNumber(servicePort)},
+          { name: 'metrics', port: 9100, targetPort:  IntOrString.fromNumber(9100) },
         ],
       },
     });

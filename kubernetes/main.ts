@@ -9,8 +9,16 @@ import { EntryChart } from './charts/entry';
 import { LogicChart } from './charts/logic';
 import { StorageChart } from './charts/storage';
 import { CertificateChart } from './charts/certificate';
+import { PrometheusChart } from './charts/prometheus';
+import { PrometheusCRDChart } from './charts/crd';
+import { GrafanaChart } from './charts/grafana';
+// import { LoggingChart } from './charts/logging';
 
 const app = new App();
+
+// Observability
+new PrometheusCRDChart(app, 'prometheus-crd');
+const prometheus = new PrometheusChart(app, 'prometheus');
 
 // Network Ingress
 const traefik = new TraefikChart(app, 'traefik');
@@ -32,6 +40,8 @@ const logic = new LogicChart(app, 'logic')
 const storage = new StorageChart(app, 'storage')
 
 const certificate = new CertificateChart(app, 'certificate')
+const grafana = new GrafanaChart(app, 'grafana');
+// const logging = new LoggingChart(app, 'logging');
 
 // Dependencies
 management.addDependency(postgres);
@@ -40,6 +50,7 @@ logic.addDependency(rabbit, redis);
 storage.addDependency(postgres, rabbit, management);
 certificate.addDependency(traefik);
 ui.addDependency(management, entry);
-
+grafana.addDependency(prometheus);
+// logging.addDependency(grafana);
 
 app.synth();

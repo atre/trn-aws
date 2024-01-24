@@ -11,7 +11,9 @@ export class PostgresDatabase extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const dbLabel = { app: "trn-db" };
+    const dbLabel = { app: "db" };
+    const postgresPort = 5432;
+    const exporterPort = 9187;
 
     // Persistent Volume Claim for the Database
     // new KubePersistentVolumeClaim(this, "db-pvc", {
@@ -37,7 +39,7 @@ export class PostgresDatabase extends Construct {
               {
                 name: "postgres",
                 image: "postgres:14.4-alpine",
-                ports: [{ containerPort: 5432 }],
+                ports: [{ containerPort: postgresPort }],
                 env: [
                   { name: "POSTGRES_DB", value: "postgres" },
                   { name: "POSTGRES_USER", value: "postgres" },
@@ -49,6 +51,17 @@ export class PostgresDatabase extends Construct {
                 //     mountPath: "/var/lib/postgresql/data",
                 //   },
                 // ],
+              },
+              {
+                name: 'postgres-exporter',
+                image: 'quay.io/prometheuscommunity/postgres-exporter:v0.15.0',
+                env: [
+                  {
+                    name: 'DATA_SOURCE_NAME',
+                    value: 'postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable'
+                  }
+                ],
+                ports: [{ containerPort: exporterPort }],
               },
             ],
             // volumes: [
@@ -66,9 +79,13 @@ export class PostgresDatabase extends Construct {
     new KubeService(this, "db-service", {
       metadata: {
         name: "trn-postgres",
+        labels: dbLabel,
       },
       spec: {
-        ports: [{ port: 5432, targetPort: IntOrString.fromNumber(5432) }],
+        ports: [
+          { name: 'db', port: postgresPort, targetPort: IntOrString.fromNumber(postgresPort) },
+          { name: 'metrics', port: exporterPort, targetPort: IntOrString.fromNumber(exporterPort) }
+        ],
         selector: dbLabel,
       },
     });

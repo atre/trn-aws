@@ -1,7 +1,10 @@
 import { Construct } from 'constructs';
+import { config } from 'dotenv';
 import { Certificate, ClusterIssuer } from '../../imports/cert-manager.io';
 import { KubeNamespace, KubeSecret } from '../../imports/k8s';
-import { Helm, Include } from 'cdk8s';
+import { Helm } from 'cdk8s';
+
+config();
 
 export class Cert extends Construct {
   constructor(scope: Construct, id: string) {
@@ -11,10 +14,6 @@ export class Cert extends Construct {
       metadata: {
         name: 'cert-manager'
       }
-    });
-
-    new Include(this, 'cert-manager-crd', {
-      url: 'https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.crds.yaml'
     });
 
     new Helm(this, 'helm-cert-manager', {
@@ -39,7 +38,7 @@ export class Cert extends Construct {
         namespace: namespace.name
       },
       stringData: {
-        secretAccessKey: '',
+        secretAccessKey: process.env.secretAccessKey ?? '',
       }
     })
 
@@ -60,7 +59,7 @@ export class Cert extends Construct {
               dns01: {
                 route53: {
                   region: 'eu-central-1',
-                  accessKeyId: 'AKIA5AMXUWCLVOY6KZZY',
+                  accessKeyId: process.env.secretKeyId,
                   secretAccessKeySecretRef: {
                     key: 'secretAccessKey',
                     name: 'cert-manager-aws-secret'

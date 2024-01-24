@@ -18,18 +18,20 @@ export class Traefik extends Construct {
       chart: 'traefik',
       repo: 'https://traefik.github.io/charts',
       values: {
-        web: {
-          redirectTo: {
-            port: 'websecure'
-          }
-        },
-        websecure: {
-          asDefault: true
-        },
         service: {
           annotations: {
             'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
           },
+        },
+        ports: {
+          web: {
+            redirectTo: {
+              port: 'websecure'
+            }
+          },
+          metrics: {
+            expose: true
+          }
         }
       }
     

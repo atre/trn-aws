@@ -12,17 +12,21 @@ export class Management extends Construct {
     new KubeService(this, "trn-management-service", {
       metadata: {
         name: serviceName,
+        labels: label
       },
       spec: {
         type: "ClusterIP",
-        ports: [{ port: 8079, targetPort: IntOrString.fromNumber(8079) }],
+        ports: [
+          { name: 'web', port: 8079, targetPort: IntOrString.fromNumber(8079) },
+          { name: 'metrics', port: 9100, targetPort:  IntOrString.fromNumber(9100) },
+        ],
         selector: label,
       },
     });
 
     new KubeDeployment(this, "deployment", {
       spec: {
-        replicas: 1,
+        replicas: 2,
         selector: {
           matchLabels: label,
         },
@@ -46,7 +50,7 @@ export class Management extends Construct {
                   { name: "AUTH_SECRET", value: "secret" },
                   // Other necessary environment variables
                 ]
-              }
+              },
             ],
             containers: [
               {
@@ -65,6 +69,11 @@ export class Management extends Construct {
                   { name: "MY_POD_NAME", valueFrom: { fieldRef: { fieldPath: "metadata.name" } } },
                   { name: "MY_NODE_NAME", valueFrom: { fieldRef: { fieldPath: "spec.nodeName" } } },
                 ]
+              },
+              {
+                name: 'node-exporter',
+                image: 'prom/node-exporter:v1.1.2',
+                ports: [{ containerPort: 9100 }],
               },
             ],
           },

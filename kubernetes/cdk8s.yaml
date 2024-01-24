@@ -5,3 +5,13 @@ imports:
   - https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
   - https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
   - https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.crds.yaml
+  - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.70.0/bundle.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana-operator-manager-config_v1_configmap.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana-operator-metrics-reader_rbac.authorization.k8s.io_v1_clusterrole.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana-operator-operator-metrics-service_v1_service.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana-operator.clusterserviceversion.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana.integreatly.org_grafanadashboards.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana.integreatly.org_grafanadatasources.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana.integreatly.org_grafanafolders.yaml
+  - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana.integreatly.org_grafanas.yaml
+  - https://raw.githubusercontent.com/grafana-operator/grafana-operator/master/examples/basic/resources.yaml
