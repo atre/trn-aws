@@ -26,6 +26,10 @@ jobs:
           ssh-key: ${{ secrets.DESTINATION_REPO_SSH_KEY }}
           path: 'destination-repo'
 
+      - name: Create Kubernetes Directory in Destination Repo
+        run: |
+          mkdir -p destination-repo/kubernetes/
+          
       - name: Move Kubernetes CDK Code
         run: |
           cp -r kubernetes/dist/* destination-repo/kubernetes/
