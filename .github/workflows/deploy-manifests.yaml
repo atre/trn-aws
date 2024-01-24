@@ -13,16 +13,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Synthesize Terraform CDK Code
-        run: |
-          cd ./terraform 
-          yarn install --frozen-lockfile
-          yarn cdktf synth
+      # - name: Synthesize Terraform CDK Code
+      #   run: |
+      #     cd ./terraform 
+      #     yarn install --frozen-lockfile
+      #     yarn cdktf synth
 
       - name: Synthesize Kubernetes CDK Code
         run: |
-          cd kubernetes
-          cdk8s synth
+          cd ./kubernetes
+          yarn install --frozen-lockfile
+          yarn cdk8s synth
 
       - name: Use SSH Key for Authentication
         run: |
@@ -33,10 +34,10 @@ jobs:
         run: |
           git clone git@github.com:dromix/cicd.git destination-repo
 
-      - name: Move Terraform CDK Code
-        run: |
-          cp -r terraform/cdktf.out/* destination-repo/terraform/
-        working-directory: ./destination-repo
+      # - name: Move Terraform CDK Code
+      #   run: |
+      #     cp -r terraform/cdktf.out/* destination-repo/terraform/
+      #   working-directory: ./destination-repo
 
       - name: Move Kubernetes CDK Code
         run: |
