@@ -51,12 +51,19 @@ jobs:
       - name: Commit Changes
         run: |
           cd destination-repo
-          git config user.name "${{ steps.get_committer_info.outputs.name }}"
-          git config user.email "${{ steps.get_committer_info.outputs.email }}"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
+          
+          # List files and show git status for debugging
+          echo "Listing files in destination-repo:"
+          ls -al
+          echo "Git status:"
+          git status
+
           if git diff --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "${{ steps.get_commit_message.outputs.message }}"
+            git commit -m "Test pipeline"
             git push
           fi
