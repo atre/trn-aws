@@ -26,12 +26,10 @@ jobs:
           echo "::set-output name=message::$commit_message"
 
       - name: Get Committer Info from Source Repo
-        id: get_committer_info
         run: |
-          committer_name=$(git log -1 --pretty=format:'%cn')
-          committer_email=$(git log -1 --pretty=format:'%ce')
-          echo "::set-output name=name::$committer_name"
-          echo "::set-output name=email::$committer_email"
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+          echo "COMMITTER_NAME=$(git log -1 --pretty=format:'%cn')" >> $GITHUB_ENV
+          echo "COMMITTER_EMAIL=$(git log -1 --pretty=format:'%ce')" >> $GITHUB_ENV
         
       - name: Checkout Destination Repo
         uses: actions/checkout@v4
@@ -51,13 +49,13 @@ jobs:
       - name: Commit Changes
         run: |
           cd destination-repo
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "$COMMITTER_NAME"
+          git config user.email "$COMMITTER_EMAIL"
           git add .
 
           if git diff-index --quiet HEAD --; then
             echo "No changes to commit"
           else
-            git commit -m "${{ steps.get_commit_message.outputs.message }}"
+            git commit -m "$COMMIT_MESSAGE"
             git push
           fi
