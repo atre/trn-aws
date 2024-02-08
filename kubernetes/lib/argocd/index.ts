@@ -1,8 +1,8 @@
 import { Helm } from "cdk8s";
 import { Construct } from "constructs";
-import * as  fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
+// import * as  fs from 'fs';
+// import * as path from 'path';
+// import * as os from 'os';
 import { KubeNamespace } from "../../imports/k8s";
 import { Application } from "../../imports/argoproj.io";
 
@@ -10,7 +10,7 @@ export class ArgoCD extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const privateKeyPath = path.join(os.homedir(), '.ssh', 'id_rsa');
+    // const privateKeyPath = path.join(os.homedir(), '.ssh', 'id_rsa');
 
     const argoCDNamespace = new KubeNamespace(this, 'argocd-namespace', {
       metadata: {
