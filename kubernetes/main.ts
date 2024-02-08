@@ -2,6 +2,8 @@ import { PostgresApp } from './applications/postgres';
 import { ArgoCDApp } from './applications/argocd';
 import { RedisApp } from './applications/redis';
 import { ManagementApp } from './applications/management';
+import { EntryApp } from './applications/entry';
+import { UIApp } from './applications/ui';
 
 // GitOps
 new ArgoCDApp().synth();
@@ -22,25 +24,14 @@ new RedisApp().synth();
 // const rabbit = new RabbitMQChart(app, 'rabbitmq');
 
 // // Application
-// const ui = new UiChart(app, 'ui');
+new UIApp().synth();
 
 new ManagementApp().synth();
-
-// const entry = new EntryChart(app, 'entry')
+new EntryApp().synth();
 // const logic = new LogicChart(app, 'logic')
 // const storage = new StorageChart(app, 'storage')
 
 // const certificate = new CertificateChart(app, 'certificate')
 // const grafana = new GrafanaChart(app, 'grafana');
 // const logging = new LoggingChart(app, 'logging');
-
-// Dependencies
-// management.chart.addDependency(postgres);
-// entry.addDependency(rabbit);
-// logic.addDependency(rabbit, redis);
-// storage.addDependency(postgres, rabbit, management);
-// certificate.addDependency(traefik);
-// ui.addDependency(management, entry);
-// grafana.addDependency(prometheus);
-// logging.addDependency(grafana);
 

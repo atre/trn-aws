@@ -1,16 +1,14 @@
 import { Helm } from "cdk8s";
 import { Construct } from "constructs";
-// import * as  fs from 'fs';
-// import * as path from 'path';
-// import * as os from 'os';
+import { config } from 'dotenv';
 import { KubeNamespace } from "../../imports/k8s";
 import { AppProject, Application } from "../../imports/argoproj.io";
+
+config();
 
 export class ArgoCD extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
-
-    // const privateKeyPath = path.join(os.homedir(), '.ssh', 'id_rsa');
 
     const argoCDNamespace = new KubeNamespace(this, 'argocd-namespace', {
       metadata: {
@@ -27,8 +25,7 @@ export class ArgoCD extends Construct {
           credentialTemplates: {
             'ssh-creds': {
               url: 'git@github.com:dromix/cicd.git',
-              // sshPrivateKey: ''
-              // sshPrivateKey: fs.readFileSync(privateKeyPath),
+              sshPrivateKey: process.env.sshKey ?? ''
             }
           },
           repositories: {
@@ -136,6 +133,66 @@ export class ArgoCD extends Construct {
         repoUrl: 'git@github.com:dromix/cicd.git',
         targetRevision: 'HEAD',
         path: 'kubernetes/management',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'application'
+      },
+      project: trnProject.name
+    }
+   })
+
+  new Application(this, 'ui-application', {
+    metadata: {
+      name: 'ui',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      info: [{
+        name: 'application',
+        value: 'frontend'
+      }],
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/ui',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'application'
+      },
+      project: trnProject.name
+    }
+   })
+
+  new Application(this, 'entry-application', {
+    metadata: {
+      name: 'entry',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      info: [{
+        name: 'application',
+        value: 'backend'
+      }],
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/entry',
       },
       destination: {
         server: 'https://kubernetes.default.svc',
