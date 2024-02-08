@@ -15,3 +15,4 @@ imports:
   - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana.integreatly.org_grafanafolders.yaml
   - https://raw.githubusercontent.com/grafana/grafana-operator/master/bundle/manifests/grafana.integreatly.org_grafanas.yaml
   - https://raw.githubusercontent.com/grafana-operator/grafana-operator/master/examples/basic/resources.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml

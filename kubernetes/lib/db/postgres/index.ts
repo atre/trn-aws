@@ -3,32 +3,24 @@ import {
   KubeDeployment,
   KubeService,
   IntOrString,
-  // KubePersistentVolumeClaim,
-  // Quantity,
-} from "../../imports/k8s";
+} from "../../../imports/k8s";
+import { sharedDBNamespace } from "../namespace";
 
 export class PostgresDatabase extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
+    const dbNamespace = sharedDBNamespace(this)
+
     const dbLabel = { app: "db" };
     const postgresPort = 5432;
     const exporterPort = 9187;
 
-    // Persistent Volume Claim for the Database
-    // new KubePersistentVolumeClaim(this, "db-pvc", {
-    //   spec: {
-    //     accessModes: ["ReadWriteOnce"],
-    //     resources: {
-    //       requests: {
-    //         storage: Quantity.fromString('10Gi'),
-    //       },
-    //     },
-    //   },
-    // });
-
     // Deployment for the PostgreSQL Database
     new KubeDeployment(this, "db-deployment", {
+      metadata: {
+        namespace: dbNamespace.name
+      },
       spec: {
         replicas: 1,
         selector: { matchLabels: dbLabel },
@@ -45,12 +37,6 @@ export class PostgresDatabase extends Construct {
                   { name: "POSTGRES_USER", value: "postgres" },
                   { name: "POSTGRES_PASSWORD", value: "postgres" },
                 ],
-                // volumeMounts: [
-                //   {
-                //     name: "postgres-storage",
-                //     mountPath: "/var/lib/postgresql/data",
-                //   },
-                // ],
               },
               {
                 name: 'postgres-exporter',
@@ -64,12 +50,6 @@ export class PostgresDatabase extends Construct {
                 ports: [{ containerPort: exporterPort }],
               },
             ],
-            // volumes: [
-            //   {
-            //     name: "postgres-storage",
-            //     persistentVolumeClaim: { claimName: "db-pvc" },
-            //   },
-            // ],
           },
         },
       },
