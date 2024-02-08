@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/jest": "^26",
     "@types/node": "^14",
-    "cdk8s-cli": "^2.198.40",
+    "cdk8s-cli": "^2.198.42",
     "jest": "^26",
     "ts-jest": "^26",
     "ts-node": "^10",

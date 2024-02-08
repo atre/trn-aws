@@ -1254,23 +1254,23 @@ case@^1.6.3:
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
 
-cdk8s-cli@^2.198.40:
-  version "2.198.40"
-  resolved "https://registry.yarnpkg.com/cdk8s-cli/-/cdk8s-cli-2.198.40.tgz#cb9c20512498c141560273a7ed12fcc8fca6fa69"
-  integrity sha512-vc9Ap8/RcNzOXCROvax5rRmqYCfBcptvfR2/XwH5ZclzfaiIF2q8fzKEW+g40Qup/bMHVK4N9gCYVQ52Tzf/WA==
+cdk8s-cli@^2.198.42:
+  version "2.198.42"
+  resolved "https://registry.yarnpkg.com/cdk8s-cli/-/cdk8s-cli-2.198.42.tgz#9b215e83b8d9489ea6faae4f2ddd00040b449543"
+  integrity sha512-ntVDYi5IJx0aoEOPmJE0s56Fbd/unnoWqUXwwK7gFssgwj+RQu4jxFnihsJ7bNQC/y6l/qb44IDef3vvsufHvA==
   dependencies:
     "@types/node" "^16"
     ajv "^8.12.0"
-    cdk8s "^2.68.33"
-    cdk8s-plus-25 "^2.22.74"
+    cdk8s "^2.68.35"
+    cdk8s-plus-25 "^2.22.75"
     codemaker "^1.94.0"
     colors "1.4.0"
     constructs "^10.3.0"
     fs-extra "^8"
     jsii-pacmak "^1.94.0"
-    jsii-srcmak "^0.1.1026"
+    jsii-srcmak "^0.1.1028"
     json2jsii "^0.4.3"
-    semver "^7.5.4"
+    semver "^7.6.0"
     sscaff "^1.2.274"
     table "^6.8.1"
     yaml "2.3.4"
@@ -1287,10 +1287,10 @@ cdk8s-plus-25@^2.22.68:
   optionalDependencies:
     backport "8.5.0"
 
-cdk8s-plus-25@^2.22.74:
-  version "2.22.74"
-  resolved "https://registry.yarnpkg.com/cdk8s-plus-25/-/cdk8s-plus-25-2.22.74.tgz#2085aeb1d80f87646c778ac7cb7d0ee450e0457e"
-  integrity sha512-uVVps5j6Mwl7jOrEvi/V5IH+LUQRRS/jI0Ff+Z6BBJZJGvnRpwneSdFHDYPBQCjk4UMWUHngMcVVuUP1J1gdmA==
+cdk8s-plus-25@^2.22.75:
+  version "2.22.75"
+  resolved "https://registry.yarnpkg.com/cdk8s-plus-25/-/cdk8s-plus-25-2.22.75.tgz#8bfc870bfe27681bf2484bbf7a20c5b6704c6ce0"
+  integrity sha512-v5nmZAs8BfN/AuV3X5osOY/l6qYlGopILpBo/+yN3QgKGiNawEOyhBg8Xsa45a+4+ZySZHva/GqL5HDxjDxR/w==
   dependencies:
     minimatch "^3.1.2"
   optionalDependencies:
@@ -1307,10 +1307,10 @@ cdk8s@^2.68.21:
   optionalDependencies:
     backport "8.5.0"
 
-cdk8s@^2.68.33:
-  version "2.68.34"
-  resolved "https://registry.yarnpkg.com/cdk8s/-/cdk8s-2.68.34.tgz#94cd2fc239061d695d713008a36ed402f39989ea"
-  integrity sha512-Ll5pisIa9VVOtfK8+AIe6K9cgKylWjjcvERwjXkf9rhUKwheiq9xYvV+0N+OyeR5/MM4uJr6aHoac/trGKVXsw==
+cdk8s@^2.68.35:
+  version "2.68.35"
+  resolved "https://registry.yarnpkg.com/cdk8s/-/cdk8s-2.68.35.tgz#75e8b83744c66620c6c5a8fbab7b7df84a90ce5f"
+  integrity sha512-14t/KSAdhY11tQBstOSzjLJ1e9JSpPgUxNIWSucfSQiEXWruXBhbmejI5soI9yXgFSfUn37JaQKaROvNH63A6g==
   dependencies:
     fast-json-patch "^3.1.1"
     follow-redirects "^1.15.2"
@@ -3103,13 +3103,13 @@ jsii-rosetta@^1.94.0:
     workerpool "^6.5.1"
     yargs "^16.2.0"
 
-jsii-srcmak@^0.1.1026:
-  version "0.1.1026"
-  resolved "https://registry.yarnpkg.com/jsii-srcmak/-/jsii-srcmak-0.1.1026.tgz#d59f751967ca4985182c43403c7456be69b35cfe"
-  integrity sha512-GoBxeUQRpTmQlvAjZ6QFaN2hG/OnSbFx5VnsuL/I69KmInlXk7Kpu5AKdqN49XbJSatMpuZd5kxQX0Z5eqQSLg==
+jsii-srcmak@^0.1.1028:
+  version "0.1.1029"
+  resolved "https://registry.yarnpkg.com/jsii-srcmak/-/jsii-srcmak-0.1.1029.tgz#b33c94b8b0e76d5d17929b7a4d4894826cddcb0b"
+  integrity sha512-SDmw+A6UkX+OoEIWtUu7gefmMsC7zrKOAnYGFawwhLwVLExb7MIh73kXPdwBoR1iM/xe1Mv8XB1qSjFR2CA3zw==
   dependencies:
     fs-extra "^9.1.0"
-    jsii "~5.3.12"
+    jsii "~5.3.15"
     jsii-pacmak "^1.94.0"
     ncp "^2.0.0"
     yargs "^15.4.1"
@@ -3133,7 +3133,7 @@ jsii@1.94.0:
     typescript "~3.9.10"
     yargs "^16.2.0"
 
-jsii@~5.3.12:
+jsii@~5.3.15:
   version "5.3.15"
   resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.15.tgz#193e1752a2338e8704d9ceac492a74df537b4ec5"
   integrity sha512-nAiGxVPHTQedMIr3qsM8d4VR/Gwn4wDLMftaA/EFm+AFidGmVt/9fkMagmGfcczOwDZZS5UNLdHUd+1mGnVdwQ==
@@ -4041,6 +4041,13 @@ semver@^6.0.0, semver@^6.3.0, semver@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
+
+semver@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
+  integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==
+  dependencies:
+    lru-cache "^6.0.0"
 
 set-blocking@^2.0.0:
   version "2.0.0"

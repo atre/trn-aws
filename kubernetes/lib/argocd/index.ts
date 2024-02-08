@@ -4,7 +4,7 @@ import { Construct } from "constructs";
 // import * as path from 'path';
 // import * as os from 'os';
 import { KubeNamespace } from "../../imports/k8s";
-import { Application } from "../../imports/argoproj.io";
+import { AppProject, Application } from "../../imports/argoproj.io";
 
 export class ArgoCD extends Construct {
   constructor(scope: Construct, id: string) {
@@ -27,7 +27,7 @@ export class ArgoCD extends Construct {
           credentialTemplates: {
             'ssh-creds': {
               url: 'git@github.com:dromix/cicd.git',
-              sshPrivateKey: ''
+              // sshPrivateKey: ''
               // sshPrivateKey: fs.readFileSync(privateKeyPath),
             }
           },
@@ -40,10 +40,37 @@ export class ArgoCD extends Construct {
       }
    });
 
-   new Application(this, 'argocd-application', {
+   const trnProject = new AppProject(this, 'trn', {
     metadata: {
-      name: 'db',
-      namespace:'db'
+      name: 'trn',
+      namespace: argoCDNamespace.name
+    },
+    spec: {
+      sourceRepos: ['git@github.com:dromix/cicd.git'],
+      destinations: [{
+        server: 'https://kubernetes.default.svc',
+        name: 'in-cluster',
+        namespace: '*'
+      }],
+      clusterResourceWhitelist: [
+        {
+          group: '*',
+          kind: '*'
+        }
+      ],
+      namespaceResourceWhitelist: [
+        {
+          kind: '*',
+          group: '*'
+        }
+      ]
+    }
+   })
+
+   new Application(this, 'postgres-application', {
+    metadata: {
+      name: 'postgres',
+      namespace: argoCDNamespace.name
     },
     spec: {
       syncPolicy: {
@@ -56,13 +83,65 @@ export class ArgoCD extends Construct {
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
         targetRevision: 'HEAD',
-        path: 'kubernetes',
+        path: 'kubernetes/postgres',
       },
       destination: {
         server: 'https://kubernetes.default.svc',
         namespace: 'db'
       },
-      project: "default"
+      project: trnProject.name
+    }
+   })
+
+  new Application(this, 'redis-application', {
+    metadata: {
+      name: 'redis',
+      namespace: argoCDNamespace.name
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/redis',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'db'
+      },
+      project: trnProject.name
+    }
+   })
+
+  new Application(this, 'management-application', {
+    metadata: {
+      name: 'management',
+      namespace: argoCDNamespace.name
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/management',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'application'
+      },
+      project: trnProject.name
     }
    })
   }
