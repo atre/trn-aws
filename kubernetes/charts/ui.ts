@@ -1,6 +1,6 @@
 import { Chart, ChartProps } from "cdk8s";
 import { Construct } from "constructs";
-import { UI } from "../lib/ui";
+import { UI } from "../lib/microservices/ui";
 
 export class UiChart extends Chart {
   constructor(scope: Construct, id: string, props: ChartProps = { }) {

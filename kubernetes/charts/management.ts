@@ -1,6 +1,6 @@
 import { Chart, ChartProps } from "cdk8s";
 import { Construct } from "constructs";
-import { Management } from "../lib/management";
+import { Management } from "../lib/microservices/management";
 
 export class ManagementChart extends Chart {
   constructor(scope: Construct, id: string, props: ChartProps = { }) {

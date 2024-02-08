@@ -1,9 +1,9 @@
 import { App } from 'cdk8s';
 // import { TraefikChart } from './charts/traefik';
-import { PostgresChart } from './charts/postgres';
+import { PostgresApp } from './charts/postgres';
 // import { UiChart } from './charts/ui';
 // import { ManagementChart } from './charts/management';
-import { RedisChart } from './charts/redis';
+// import { RedisChart } from './charts/redis';
 // import { RabbitMQChart } from './charts/rabbitmq';
 // import { EntryChart } from './charts/entry';
 // import { LogicChart } from './charts/logic';
@@ -15,7 +15,6 @@ import { RedisChart } from './charts/redis';
 import { ArgoCDChart } from './charts/argocd';
 // import { LoggingChart } from './charts/logging';
 
-const db = new App({outdir: 'dist/databases'});
 
 // Observability
 // new PrometheusCRDChart(app, 'prometheus-crd');
@@ -25,8 +24,8 @@ const db = new App({outdir: 'dist/databases'});
 // const traefik = new TraefikChart(app, 'traefik');
 
 // // DBs
-new PostgresChart(db, 'postgres');
-new RedisChart(db, 'redis');
+new PostgresApp().synth();
+// new RedisChart(db, 'redis');
 
 // // Broker message
 // const rabbit = new RabbitMQChart(app, 'rabbitmq');
@@ -53,8 +52,6 @@ new RedisChart(db, 'redis');
 // ui.addDependency(management, entry);
 // grafana.addDependency(prometheus);
 // logging.addDependency(grafana);
-
-db.synth();
 
 const gitOps = new App({outdir: 'dist/gitops'});
 

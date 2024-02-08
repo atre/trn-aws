@@ -50,7 +50,8 @@ export class ArgoCD extends Construct {
         automated: {
           prune: true,
           selfHeal: true
-        }
+        },
+        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',

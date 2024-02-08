@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { IntOrString, KubeDeployment, KubeService } from "../../imports/k8s";
+import { IntOrString, KubeDeployment, KubeService } from "../../../imports/k8s";
 
 export class UI extends Construct {
   constructor(scope: Construct, id: string) {
