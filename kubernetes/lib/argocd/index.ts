@@ -27,7 +27,8 @@ export class ArgoCD extends Construct {
           credentialTemplates: {
             'ssh-creds': {
               url: 'git@github.com:dromix/cicd.git',
-              sshPrivateKey: fs.readFileSync(privateKeyPath),
+              sshPrivateKey: ''
+              // sshPrivateKey: fs.readFileSync(privateKeyPath),
             }
           },
           repositories: {
