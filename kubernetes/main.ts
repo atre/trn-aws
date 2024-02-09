@@ -7,6 +7,9 @@ import { UIApp } from './applications/ui';
 import { LogicApp } from './applications/logic';
 import { RabbitMQApp } from './applications/rabbitmq';
 import { StorageApp } from './applications/storage';
+import { TraefikApp } from './applications/traefik';
+import { GrafanaApp } from './applications/grafana';
+import { PrometheusApp } from './applications/prometheus';
 
 // GitOps
 new ArgoCDApp().synth();
@@ -15,15 +18,12 @@ new ArgoCDApp().synth();
 new PostgresApp().synth();
 new RedisApp().synth();
 
-
 // Observability
-// new PrometheusCRDChart(app, 'prometheus-crd');
-// const prometheus = new PrometheusChart(app, 'prometheus');
-// const grafana = new GrafanaChart(app, 'grafana');
-// const logging = new LoggingChart(app, 'logging');
+new PrometheusApp().synth();
+new GrafanaApp().synth();
 
 // Network Ingress
-// const traefik = new TraefikChart(app, 'traefik');
+new TraefikApp().synth();
 
 // Broker message
 new RabbitMQApp().synth();

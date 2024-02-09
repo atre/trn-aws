@@ -275,5 +275,83 @@ export class ArgoCD extends Construct {
       project: trnProject.name
     }
    })
+
+  new Application(this, 'prometheus-application', {
+    metadata: {
+      name: 'prometheus',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/prometheus',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'monitoring'
+      },
+      project: trnProject.name
+    }
+   })
+
+  new Application(this, 'grafana-application', {
+    metadata: {
+      name: 'grafana',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/grafana',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'monitoring'
+      },
+      project: trnProject.name
+    }
+   })
+
+  new Application(this, 'traefik-application', {
+    metadata: {
+      name: 'traefik',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/traefik',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'traefik'
+      },
+      project: trnProject.name
+    }
+   })
   }
 }
