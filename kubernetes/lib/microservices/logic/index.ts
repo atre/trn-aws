@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { IntOrString, KubeDeployment, KubeService } from "../../../imports/k8s";
+import { IntOrString, KubeDeployment, KubeNamespace, KubeService } from "../../../imports/k8s";
 
 export class Logic extends Construct {
   constructor(scope: Construct, id: string) {
@@ -8,10 +8,17 @@ export class Logic extends Construct {
     const label = { app: 'logic' };
     const servicePort = 8085;
 
+    const appNamespace = new KubeNamespace(this, 'logic-namespace', {
+      metadata: {
+        name: 'application',
+      },
+    });
+
     // Logic Deployment
     new KubeDeployment(this, 'logic-deployment', {
       metadata: {
         name: 'logic',
+        namespace: appNamespace.name,
       },
       spec: {
         replicas: 1,
@@ -21,6 +28,7 @@ export class Logic extends Construct {
         template: {
           metadata: {
             labels: label,
+            namespace: appNamespace.name,
           },
           spec: {
             containers: [
@@ -32,10 +40,10 @@ export class Logic extends Construct {
                 ],
                 env: [
                   { name: 'SERVER_PORT', value: '8085' },
-                  { name: 'REDIS_HOST', value: 'redis' },
+                  { name: 'REDIS_HOST', value: 'redis.db.svc.cluster.local' },
                   { name: 'REDIS_PORT', value: '6379' },
                   { name: 'REDIS_DB', value: '0' },
-                  { name: 'RABBIT_HOST', value: 'rabbitmq' },
+                  { name: 'RABBIT_HOST', value: 'rabbitmq.message-broker.svc.cluster.local' },
                   { name: 'RABBIT_USER', value: 'user' },
                   { name: 'RABBIT_PASSWORD', value: 'password' },
                   { name: 'RABBIT_PORT', value: '5672' },
@@ -57,6 +65,7 @@ export class Logic extends Construct {
       metadata: {
         name: 'logic',
         labels: label,
+        namespace: appNamespace.name,
       },
       spec: {
         selector: label,

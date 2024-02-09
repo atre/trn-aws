@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { IntOrString, KubeDeployment, KubeService } from "../../../imports/k8s";
+import { IntOrString, KubeDeployment, KubeNamespace, KubeService } from "../../../imports/k8s";
 
 export class Storage extends Construct {
   constructor(scope: Construct, id: string) {
@@ -8,9 +8,16 @@ export class Storage extends Construct {
     const label = { app: 'storage' };
     const servicePort = 8082;
 
+    const appNamespace = new KubeNamespace(this, 'storage-namespace', {
+      metadata: {
+        name: 'application',
+      },
+    });
+
     new KubeDeployment(this, 'storage-deployment', {
       metadata: {
         name: 'storage',
+        namespace: appNamespace.name
       },
       spec: {
         replicas: 1,
@@ -20,6 +27,7 @@ export class Storage extends Construct {
         template: {
           metadata: {
             labels: label,
+            namespace: appNamespace.name,
           },
           spec: {
             containers: [
@@ -31,12 +39,12 @@ export class Storage extends Construct {
                 ],
                 env: [
                   { name: 'SERVER_PORT', value: '8082' },
-                  { name: 'DB_HOST', value: 'postgres' },
+                  { name: 'DB_HOST', value: 'trn-postgres.db.svc.cluster.local' },
                   { name: 'DB_PORT', value: '5432' },
                   { name: 'DB_USER', value: 'postgres' },
                   { name: 'DB_PASSWORD', value: 'postgres' },
                   { name: 'DB_NAME', value: 'postgres' },
-                  { name: 'RABBIT_HOST', value: 'rabbitmq' },
+                  { name: 'RABBIT_HOST', value: 'rabbitmq.message-broker.svc.cluster.local' },
                   { name: 'RABBIT_USER', value: 'user' },
                   { name: 'RABBIT_PASSWORD', value: 'password' },
                   { name: 'RABBIT_PORT', value: '5672' },
@@ -57,6 +65,7 @@ export class Storage extends Construct {
       metadata: {
         name: 'storage',
         labels: label,
+        namespace: appNamespace.name,
       },
       spec: {
         selector: label,

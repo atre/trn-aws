@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { IntOrString, KubeDeployment, KubeService } from "../../imports/k8s";
+import { IntOrString, KubeDeployment, KubeNamespace, KubeService } from "../../imports/k8s";
 
 export class RabbitMQ extends Construct {
   constructor(scope: Construct, id: string) {
@@ -8,9 +8,16 @@ export class RabbitMQ extends Construct {
     const label = { app: 'rabbitmq' };
     const exporterPort = 9419;
 
+    const rabbitNamespace = new KubeNamespace(this, 'rabbitmq-namespace', {
+      metadata: {
+        name: 'message-broker',
+      },
+    });
+
     new KubeDeployment(this, 'rabbitmq-deployment', {
       metadata: {
         name: 'rabbitmq',
+        namespace: rabbitNamespace.name,
       },
       spec: {
         replicas: 1,
@@ -20,6 +27,7 @@ export class RabbitMQ extends Construct {
         template: {
           metadata: {
             labels: label,
+            namespace: rabbitNamespace.name,
           },
           spec: {
             containers: [
@@ -63,6 +71,7 @@ export class RabbitMQ extends Construct {
       metadata: {
         name: 'rabbitmq',
         labels: label,
+        namespace: rabbitNamespace.name,
       },
       spec: {
         selector: label,

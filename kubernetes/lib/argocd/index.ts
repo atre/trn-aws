@@ -201,5 +201,91 @@ export class ArgoCD extends Construct {
       project: trnProject.name
     }
    })
+
+  new Application(this, 'rabbitmq-application', {
+    metadata: {
+      name: 'rabbitmq',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/rabbitmq',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'message-broker'
+      },
+      project: trnProject.name
+    }
+   })
+
+     new Application(this, 'logic-application', {
+    metadata: {
+      name: 'logic',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      info: [{
+        name: 'application',
+        value: 'backend'
+      }],
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/logic',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'application'
+      },
+      project: trnProject.name
+    }
+   })
+
+     new Application(this, 'storage-application', {
+    metadata: {
+      name: 'storage',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      info: [{
+        name: 'application',
+        value: 'backend'
+      }],
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/storage',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'application'
+      },
+      project: trnProject.name
+    }
+   })
   }
 }
