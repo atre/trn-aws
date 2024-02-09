@@ -10,6 +10,7 @@ import { StorageApp } from './applications/storage';
 import { TraefikApp } from './applications/traefik';
 import { GrafanaApp } from './applications/grafana';
 import { PrometheusApp } from './applications/prometheus';
+import { CertificateApp } from './applications/certificate';
 
 // GitOps
 new ArgoCDApp().synth();
@@ -37,6 +38,5 @@ new LogicApp().synth();
 new StorageApp().synth();
 
 // Security
-// const certificate = new CertificateChart(app, 'certificate')
-
+new CertificateApp().synth();
 

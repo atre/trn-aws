@@ -353,5 +353,31 @@ export class ArgoCD extends Construct {
       project: trnProject.name
     }
    })
+
+  new Application(this, 'certificate-application', {
+    metadata: {
+      name: 'certificate',
+      namespace: argoCDNamespace.name,
+    },
+    spec: {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true
+        },
+        syncOptions: ['CreateNamespace=true']
+      },
+      source: {
+        repoUrl: 'git@github.com:dromix/cicd.git',
+        targetRevision: 'HEAD',
+        path: 'kubernetes/certificate',
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: 'security'
+      },
+      project: trnProject.name
+    }
+   })
   }
 }
