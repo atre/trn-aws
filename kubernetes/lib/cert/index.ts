@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { config } from 'dotenv';
 import { Certificate, ClusterIssuer } from '../../imports/cert-manager.io';
-import { KubeNamespace, KubeSecret } from '../../imports/k8s';
+import { KubeNamespace, KubeServiceAccount } from '../../imports/k8s';
 import { Helm } from 'cdk8s';
 
 config();
@@ -31,15 +31,13 @@ export class Cert extends Construct {
       }
     });
 
-    new KubeSecret(this, 'cert-user-secret', {
-      type: 'Opaque',
+    new KubeServiceAccount(this, 'cert-service-account', {
       metadata: {
-        name: 'cert-manager-aws-secret',
-        namespace: namespace.name
+        name: 'cert-manager',
+        annotations: {
+          'eks.amazonaws.com/role-arn': 'arn:aws:iam::894208094359:role/CertManagerIAMRole',
+        },
       },
-      stringData: {
-        secretAccessKey: process.env.secretAccessKey ?? '',
-      }
     })
 
     new ClusterIssuer(this, 'cluster-issuer', {
@@ -59,11 +57,7 @@ export class Cert extends Construct {
               dns01: {
                 route53: {
                   region: 'eu-central-1',
-                  accessKeyId: process.env.secretKeyId,
-                  secretAccessKeySecretRef: {
-                    key: 'secretAccessKey',
-                    name: 'cert-manager-aws-secret'
-                  }
+                  role: 'arn:aws:iam::894208094359:role/CertManagerIAMRole'
                 }
               }
             }
