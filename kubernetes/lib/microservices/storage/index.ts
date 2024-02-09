@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { IntOrString, KubeDeployment, KubeNamespace, KubeService } from "../../../imports/k8s";
+import { IntOrString, KubeDeployment, KubeService } from "../../../imports/k8s";
 
 export class Storage extends Construct {
   constructor(scope: Construct, id: string) {
@@ -8,16 +8,9 @@ export class Storage extends Construct {
     const label = { app: 'storage' };
     const servicePort = 8082;
 
-    const appNamespace = new KubeNamespace(this, 'storage-namespace', {
-      metadata: {
-        name: 'application',
-      },
-    });
-
     new KubeDeployment(this, 'storage-deployment', {
       metadata: {
         name: 'storage',
-        namespace: appNamespace.name
       },
       spec: {
         replicas: 1,
@@ -27,7 +20,6 @@ export class Storage extends Construct {
         template: {
           metadata: {
             labels: label,
-            namespace: appNamespace.name,
           },
           spec: {
             containers: [
@@ -65,7 +57,6 @@ export class Storage extends Construct {
       metadata: {
         name: 'storage',
         labels: label,
-        namespace: appNamespace.name,
       },
       spec: {
         selector: label,

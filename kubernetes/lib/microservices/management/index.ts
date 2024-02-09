@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { IntOrString, KubeDeployment, KubeNamespace, KubeService } from "../../../imports/k8s";
+import { IntOrString, KubeDeployment, KubeService } from "../../../imports/k8s";
 
 export class Management extends Construct {
   constructor(scope: Construct, id: string) {
@@ -9,17 +9,10 @@ export class Management extends Construct {
     const serviceName = "trn-management-service";
     const servicePort = 8079;
 
-    const appNamespace = new KubeNamespace(this, 'management-namespace', {
-      metadata: {
-        name: 'application',
-      },
-    });
-
     new KubeService(this, "trn-management-service", {
       metadata: {
         name: serviceName,
         labels: label,
-        namespace: appNamespace.name,
       },
       spec: {
         type: "ClusterIP",
@@ -32,16 +25,13 @@ export class Management extends Construct {
     });
 
     new KubeDeployment(this, "deployment", {
-      metadata: {
-        namespace: appNamespace.name,
-      },
       spec: {
         replicas: 1,
         selector: {
           matchLabels: label,
         },
         template: {
-          metadata: { labels: label, namespace: appNamespace.name },
+          metadata: { labels: label },
           spec: {
             initContainers: [
               {
