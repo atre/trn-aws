@@ -1,30 +1,31 @@
 import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
-import { TerraformStack } from "cdktf";
+import { Fn, TerraformOutput, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 import { config } from "../../../config";
-import { IamUser } from "@cdktf/provider-aws/lib/iam-user";
-import { IamUserPolicyAttachment } from "@cdktf/provider-aws/lib/iam-user-policy-attachment";
 import { DataAwsRoute53Zone } from "@cdktf/provider-aws/lib/data-aws-route53-zone";
 import { IamPolicy } from "@cdktf/provider-aws/lib/iam-policy";
+import { IamRole } from "@cdktf/provider-aws/lib/iam-role";
+import { DataAwsIamPolicyDocument } from "@cdktf/provider-aws/lib/data-aws-iam-policy-document";
+import { DataAwsEksCluster } from "@cdktf/provider-aws/lib/data-aws-eks-cluster";
+import { IamPolicyAttachment } from "@cdktf/provider-aws/lib/iam-policy-attachment";
 
 export class CertManagerIAMUserStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: { hostedZoneName: string}) {
+  constructor(scope: Construct, id: string, props: { hostedZoneName: string, clusterName: string}) {
     super(scope, id);
 
     new AwsProvider(this, 'Aws', {
       region: config.REGION,
     });
 
-    // Create an IAM user
-    const user = new IamUser(this, 'cert-manager-user', {
-      name: 'CertManagerIAMUser',
+    const eksCluster = new DataAwsEksCluster(this, 'eks-cluster', {
+      name: props.clusterName,
     });
 
     const hostedZone = new DataAwsRoute53Zone(this, 'route53-hosted-zone', {
       name: props.hostedZoneName
     })
 
-    const policy = new IamPolicy(this, 'cert-manager-policy', {
+    const certManagerPolicy = new IamPolicy(this, 'cert-manager-policy', {
       name: 'CertManagerPolicy',
       policy: JSON.stringify({
         Version: '2012-10-17',
@@ -51,25 +52,48 @@ export class CertManagerIAMUserStack extends TerraformStack {
       }),
     });
 
-    new IamUserPolicyAttachment(this, 'cert-manager-policy-attachment', {
-      user: user.name,
-      policyArn: policy.arn,
+    const oidcIssuer = this.parseOIDC(eksCluster.identity.get(0).oidc.get(0).issuer);
+
+    new TerraformOutput(this, 'oidc', {
+      value: oidcIssuer
     });
 
-    // Create access keys
-    // TODO find a way to create secret
-    // const accessKey = new IamAccessKey(this, 'CertManagerAccessKey', {
-    //   user: user.name,
-    // });
+    const certManagerRole = new IamRole(this, 'cert-manager-role', {
+      name: "CertManagerIAMRole",
+      assumeRolePolicy: new DataAwsIamPolicyDocument(this, 'assume-role-policy', {
+        statement: [{
+          actions: ["sts:AssumeRoleWithWebIdentity"],
+          principals: [{
+            type: "Federated",
+            identifiers: [oidcIssuer],
+          }],
+          condition: [{
+            test: "StringEquals",
+            variable: `${oidcIssuer}:sub`,
+            values: ["system:serviceaccount:cert-manager:cert-manager"],
+          }],
+        }],
+      }).json,
+    });
 
-    // // Output access keys
-    // new TerraformOutput(this, 'AccessKeyId', {
-    //   value: accessKey.id,
-    // });
+    new IamPolicyAttachment(this, 'cert-manager-policy-attachment', {
+      name: 'CertManagerPolicy',
+      policyArn: certManagerPolicy.arn,
+      roles: [certManagerRole.name],
+    });
+  }
 
-    // new TerraformOutput(this, 'SecretAccessKey', {
-    //   value: accessKey.encryptedSecret,
-    //   sensitive: false,
-    // });
+  private parseOIDC(issuerUrl: string) {
+    const oidcParts = Fn.split('/id/', issuerUrl);
+    const regionAndId = Fn.split('.eks.', Fn.element(oidcParts, 0));
+    const region = Fn.element(regionAndId, 1);
+    const oidcId = Fn.element(oidcParts, 1);
+
+    // Dynamically construct the OIDC provider ARN
+    const oidcProviderArn = Fn.format(
+      'arn:aws:iam::894208094359:oidc-provider/oidc.eks.%s.amazonaws.com/id/%s',
+      [region, oidcId],
+    );
+    return oidcProviderArn;
   }
 }

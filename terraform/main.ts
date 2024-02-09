@@ -66,7 +66,8 @@ new Route53HostedZone(app, 'public-hosted-zone', {
 });
 
 new CertManagerIAMUserStack(app, 'cert-manager-iam-user', {
-  hostedZoneName: 'aws.catops.space'
+  hostedZoneName: 'aws.catops.space',
+  clusterName: 'eks-cluster'
 });
 
 new Route53RecordStack(app, 'route53-record', {
