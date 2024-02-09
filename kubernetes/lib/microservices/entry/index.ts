@@ -34,7 +34,7 @@ export class Entry extends Construct {
                   { name: 'AUTH_SECRET', value: 'secret' },
                   { name: 'RABBIT_USER', value: 'user' },
                   { name: 'RABBIT_PASSWORD', value: 'password' },
-                  { name: 'RABBIT_HOST', value: 'rabbitmq' },
+                  { name: 'RABBIT_HOST', value: 'rabbitmq.message-broker.svc.cluster.local' },
                   { name: 'RABBIT_PORT', value: '5672' },
                 ],
               },
