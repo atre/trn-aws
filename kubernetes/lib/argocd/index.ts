@@ -178,10 +178,6 @@ export class ArgoCD extends Construct {
       namespace: argoCDNamespace.name,
     },
     spec: {
-      info: [{
-        name: 'application',
-        value: 'backend'
-      }],
       syncPolicy: {
         automated: {
           prune: true,
@@ -228,16 +224,12 @@ export class ArgoCD extends Construct {
     }
    })
 
-     new Application(this, 'logic-application', {
+  new Application(this, 'logic-application', {
     metadata: {
       name: 'logic',
       namespace: argoCDNamespace.name,
     },
     spec: {
-      info: [{
-        name: 'application',
-        value: 'backend'
-      }],
       syncPolicy: {
         automated: {
           prune: true,
@@ -258,16 +250,12 @@ export class ArgoCD extends Construct {
     }
    })
 
-     new Application(this, 'storage-application', {
+  new Application(this, 'storage-application', {
     metadata: {
       name: 'storage',
       namespace: argoCDNamespace.name,
     },
     spec: {
-      info: [{
-        name: 'application',
-        value: 'backend'
-      }],
       syncPolicy: {
         automated: {
           prune: true,
