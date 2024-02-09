@@ -374,7 +374,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'security'
+        namespace: 'cert-manager'
       },
       project: trnProject.name
     }

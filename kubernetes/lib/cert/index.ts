@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { config } from 'dotenv';
 import { Certificate, ClusterIssuer } from '../../imports/cert-manager.io';
-import { KubeNamespace, KubeServiceAccount } from '../../imports/k8s';
+import { KubeNamespace } from '../../imports/k8s';
 import { Helm } from 'cdk8s';
 
 config();
@@ -27,18 +27,15 @@ export class Cert extends Construct {
           defaultIssuerGroup: 'cert-manager.io',
           defaultIssuerKind: 'ClusterIssuer',
           defaultIssuerName: 'cert-manager-acme-issuer'
+        },
+        serviceAccount: {
+          name: 'cert-manager',
+          annotations: {
+            'eks.amazonaws.com/role-arn': 'arn:aws:iam::894208094359:role/CertManagerIAMRole',
+          }
         }
       }
     });
-
-    new KubeServiceAccount(this, 'cert-service-account', {
-      metadata: {
-        name: 'cert-manager',
-        annotations: {
-          'eks.amazonaws.com/role-arn': 'arn:aws:iam::894208094359:role/CertManagerIAMRole',
-        },
-      },
-    })
 
     new ClusterIssuer(this, 'cluster-issuer', {
       metadata: {
@@ -48,7 +45,8 @@ export class Cert extends Construct {
       spec: {
         acme: {
           email: 'kalyuzhni.sergei@gmail.com',
-          server: 'https://acme-v02.api.letsencrypt.org/directory',
+          // server: 'https://acme-v02.api.letsencrypt.org/directory',
+          server: 'https://acme-staging-v02.api.letsencrypt.org/directory',
           privateKeySecretRef: {
             name: 'cert-manager-acme-private-key'
           },
@@ -68,7 +66,8 @@ export class Cert extends Construct {
 
     new Certificate(this, 'certificate', {
       metadata: {
-        name: 'le-crt'
+        name: 'le-crt',
+        namespace: namespace.name
       },
       spec: {
         secretName: 'tls-secret',
