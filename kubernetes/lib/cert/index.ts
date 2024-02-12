@@ -1,8 +1,8 @@
 import { Construct } from 'constructs';
 import { config } from 'dotenv';
 import { Certificate, ClusterIssuer } from '../../imports/cert-manager.io';
-import { KubeNamespace } from '../../imports/k8s';
 import { Helm } from 'cdk8s';
+import { KubeNamespace } from '../../imports/k8s';
 
 config();
 
@@ -10,17 +10,17 @@ export class Cert extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const namespace = new KubeNamespace(this, 'cert-manager-namespace', {
+    const ns = new KubeNamespace(this, 'certificate-ns', {
       metadata: {
         name: 'cert-manager'
       }
-    });
+    })
 
     new Helm(this, 'helm-cert-manager', {
       chart: 'cert-manager',
       repo: 'https://charts.jetstack.io',
+      namespace: ns.name,
       version: 'v1.13.3',
-      namespace: namespace.name,
       values: {
         installCRDs: true,
         ingressShim: {
@@ -40,7 +40,7 @@ export class Cert extends Construct {
     new ClusterIssuer(this, 'cluster-issuer', {
       metadata: {
         name: 'cert-manager-acme-issuer',
-        namespace: namespace.name
+        namespace: ns.name,
       },
       spec: {
         acme: {
@@ -67,11 +67,11 @@ export class Cert extends Construct {
     new Certificate(this, 'certificate', {
       metadata: {
         name: 'le-crt',
-        namespace: namespace.name
+        namespace: ns.name,
       },
       spec: {
         secretName: 'tls-secret',
-        dnsNames: ['aws.catops.space', '*.aws.catops.space'],
+        dnsNames: ['clickops.life', '*.clickops.life'],
         issuerRef: {
           name: 'cert-manager-acme-issuer',
           kind: 'ClusterIssuer'

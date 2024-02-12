@@ -1,5 +1,5 @@
 import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
-import { Fn, TerraformOutput, TerraformStack } from "cdktf";
+import { Fn, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 import { config } from "../../../config";
 import { DataAwsRoute53Zone } from "@cdktf/provider-aws/lib/data-aws-route53-zone";
@@ -7,7 +7,10 @@ import { IamPolicy } from "@cdktf/provider-aws/lib/iam-policy";
 import { IamRole } from "@cdktf/provider-aws/lib/iam-role";
 import { DataAwsIamPolicyDocument } from "@cdktf/provider-aws/lib/data-aws-iam-policy-document";
 import { DataAwsEksCluster } from "@cdktf/provider-aws/lib/data-aws-eks-cluster";
-import { IamPolicyAttachment } from "@cdktf/provider-aws/lib/iam-policy-attachment";
+import { IamOpenidConnectProvider } from "@cdktf/provider-aws/lib/iam-openid-connect-provider";
+import { DataTlsCertificate } from "@cdktf/provider-tls/lib/data-tls-certificate";
+import { TlsProvider } from "@cdktf/provider-tls/lib/provider";
+import { IamRolePolicyAttachment } from "@cdktf/provider-aws/lib/iam-role-policy-attachment";
 
 export class CertManagerIAMUserStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: { hostedZoneName: string, clusterName: string}) {
@@ -16,6 +19,8 @@ export class CertManagerIAMUserStack extends TerraformStack {
     new AwsProvider(this, 'Aws', {
       region: config.REGION,
     });
+
+    new TlsProvider(this, 'tls-provider');
 
     const eksCluster = new DataAwsEksCluster(this, 'eks-cluster', {
       name: props.clusterName,
@@ -52,11 +57,21 @@ export class CertManagerIAMUserStack extends TerraformStack {
       }),
     });
 
-    const oidcIssuer = this.parseOIDC(eksCluster.identity.get(0).oidc.get(0).issuer);
+    const oidcIssuer = eksCluster.identity.get(0).oidc.get(0).issuer;
 
-    new TerraformOutput(this, 'oidc', {
-      value: oidcIssuer
+    const tlsCertificate = new DataTlsCertificate(this, 'tls-certificate', {
+      url: oidcIssuer
     });
+
+    const thumbprint = tlsCertificate.certificates.get(0).sha1Fingerprint;
+
+    const cluster = new IamOpenidConnectProvider(this, 'oidc-provider', {
+      clientIdList: ['sts.amazonaws.com'],
+      url: oidcIssuer,
+      thumbprintList: [thumbprint]
+    });
+    
+    const oidcUrl = Fn.replace(cluster.url, 'https://', '');
 
     const certManagerRole = new IamRole(this, 'cert-manager-role', {
       name: "CertManagerIAMRole",
@@ -65,35 +80,20 @@ export class CertManagerIAMUserStack extends TerraformStack {
           actions: ["sts:AssumeRoleWithWebIdentity"],
           principals: [{
             type: "Federated",
-            identifiers: [oidcIssuer],
+            identifiers: [cluster.arn],
           }],
           condition: [{
             test: "StringEquals",
-            variable: `${oidcIssuer}:sub`,
+            variable: `${oidcUrl}:sub`,
             values: ["system:serviceaccount:cert-manager:cert-manager"],
           }],
         }],
       }).json,
     });
 
-    new IamPolicyAttachment(this, 'cert-manager-policy-attachment', {
-      name: 'CertManagerPolicy',
+    new IamRolePolicyAttachment(this, 'cert-manager-policy-attachment', {
       policyArn: certManagerPolicy.arn,
-      roles: [certManagerRole.name],
+      role: certManagerRole.name,
     });
-  }
-
-  private parseOIDC(issuerUrl: string) {
-    const oidcParts = Fn.split('/id/', issuerUrl);
-    const regionAndId = Fn.split('.eks.', Fn.element(oidcParts, 0));
-    const region = Fn.element(regionAndId, 1);
-    const oidcId = Fn.element(oidcParts, 1);
-
-    // Dynamically construct the OIDC provider ARN
-    const oidcProviderArn = Fn.format(
-      'arn:aws:iam::894208094359:oidc-provider/oidc.eks.%s.amazonaws.com/id/%s',
-      [region, oidcId],
-    );
-    return oidcProviderArn;
   }
 }

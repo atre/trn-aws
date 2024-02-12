@@ -6,7 +6,6 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
     "get": "cdktf get",
     "build": "tsc",
     "synth": "cdktf synth",
@@ -26,11 +25,11 @@
     "@cdktf/provider-aws": "^18.2.0",
     "@cdktf/provider-helm": "^9.0.2",
     "@cdktf/provider-kubernetes": "^10.0.1",
+    "@cdktf/provider-tls": "^10.0.0",
     "@sinclair/typebox": "^0.31.28",
     "cdktf": "^0.19.2",
     "constructs": "^10.3.0",
-    "dotenv": "^16.3.1",
-    "husky": "^8.0.3"
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.10",

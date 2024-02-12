@@ -45,10 +45,10 @@ export class Traefik extends Construct {
         tls: {
           domains: [
             {
-              main: 'aws.catops.space',
+              main: 'clickops.life',
             },
             {
-              main: '*.aws.catops.space',
+              main: '*.clickops.life',
             }
           ],
           secretName: 'tls-secret'

@@ -317,6 +317,11 @@
   resolved "https://registry.yarnpkg.com/@cdktf/provider-kubernetes/-/provider-kubernetes-10.0.1.tgz#55e2e14f17fc129234e2e8dd0775bee0dd0d4ade"
   integrity sha512-JaYGNtMIvZEY8mqfcx4YHPRipxkXvGfsHHzYjUN4iRa3zONHmHMTlkxYyAybldqOaPkMmJPG/tiGXl2Vm9jWDQ==
 
+"@cdktf/provider-tls@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@cdktf/provider-tls/-/provider-tls-10.0.0.tgz#b8c42ca650a075cfe925e495c99c027e00892e72"
+  integrity sha512-iDrN4uMfm04elu8Ixb1fLTJmWJRh+IojMmKj8bUs00Ow/aYeqe97n6U4srMlO2/PfXzG5oonmJEOFreduI/1lg==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -2167,11 +2172,6 @@ human-signals@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
-
-husky@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.3.tgz#4936d7212e46d1dea28fef29bb3a108872cd9184"
-  integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
 
 ieee754@^1.1.13:
   version "1.2.1"
