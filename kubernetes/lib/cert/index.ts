@@ -40,7 +40,6 @@ export class Cert extends Construct {
     new ClusterIssuer(this, 'cluster-issuer', {
       metadata: {
         name: 'cert-manager-acme-issuer',
-        namespace: ns.name,
       },
       spec: {
         acme: {
@@ -55,7 +54,7 @@ export class Cert extends Construct {
               dns01: {
                 route53: {
                   region: 'eu-central-1',
-                  role: 'arn:aws:iam::894208094359:role/CertManagerIAMRole'
+                  // role: 'arn:aws:iam::894208094359:role/CertManagerIAMRole'
                 }
               }
             }
@@ -67,7 +66,7 @@ export class Cert extends Construct {
     new Certificate(this, 'certificate', {
       metadata: {
         name: 'le-crt',
-        namespace: ns.name,
+        // namespace: ns.name,
       },
       spec: {
         secretName: 'tls-secret',
