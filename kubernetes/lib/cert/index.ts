@@ -44,8 +44,8 @@ export class Cert extends Construct {
       spec: {
         acme: {
           email: 'kalyuzhni.sergei@gmail.com',
-          // server: 'https://acme-v02.api.letsencrypt.org/directory',
-          server: 'https://acme-staging-v02.api.letsencrypt.org/directory',
+          server: 'https://acme-v02.api.letsencrypt.org/directory',
+          // server: 'https://acme-staging-v02.api.letsencrypt.org/directory',
           privateKeySecretRef: {
             name: 'cert-manager-acme-private-key'
           },
