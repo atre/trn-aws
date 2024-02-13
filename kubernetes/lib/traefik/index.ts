@@ -62,6 +62,7 @@ export class Traefik extends Construct {
               {
                 name: 'trn-ui-service',
                 port: IngressRouteSpecRoutesServicesPort.fromNumber(80),
+                namespace: 'application'
               },
             ],
           },
@@ -72,6 +73,7 @@ export class Traefik extends Construct {
               {
                 name: 'trn-management-service',
                 port: IngressRouteSpecRoutesServicesPort.fromNumber(8079),
+                namespace: 'application'
               },
             ],
           },
@@ -82,6 +84,7 @@ export class Traefik extends Construct {
               {
                 name: 'trn-management-service',
                 port: IngressRouteSpecRoutesServicesPort.fromNumber(8079),
+                namespace: 'application'
               },
             ],
           },
@@ -92,6 +95,7 @@ export class Traefik extends Construct {
               {
                 name: 'entry',
                 port: IngressRouteSpecRoutesServicesPort.fromNumber(8080),
+                namespace: 'application'
               },
             ],
           },
