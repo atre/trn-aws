@@ -136,7 +136,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'application'
       },
       project: trnProject.name
     }
@@ -166,7 +165,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'application'
       },
       project: trnProject.name
     }
@@ -192,7 +190,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'application'
       },
       project: trnProject.name
     }
@@ -244,7 +241,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'application'
       },
       project: trnProject.name
     }
@@ -270,7 +266,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'application'
       },
       project: trnProject.name
     }
@@ -348,7 +343,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'traefik'
       },
       project: trnProject.name
     }
@@ -374,7 +368,6 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: 'cert-manager'
       },
       project: trnProject.name
     }

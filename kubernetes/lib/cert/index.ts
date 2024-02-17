@@ -2,7 +2,6 @@ import { Construct } from 'constructs';
 import { config } from 'dotenv';
 import { Certificate, ClusterIssuer } from '../../imports/cert-manager.io';
 import { Helm } from 'cdk8s';
-import { KubeNamespace } from '../../imports/k8s';
 
 config();
 
@@ -10,16 +9,10 @@ export class Cert extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const ns = new KubeNamespace(this, 'certificate-ns', {
-      metadata: {
-        name: 'cert-manager'
-      }
-    })
-
     new Helm(this, 'helm-cert-manager', {
       chart: 'cert-manager',
       repo: 'https://charts.jetstack.io',
-      namespace: ns.name,
+      // namespace: ns.name,
       version: 'v1.13.3',
       values: {
         installCRDs: true,
@@ -45,6 +38,7 @@ export class Cert extends Construct {
         acme: {
           email: 'kalyuzhni.sergei@gmail.com',
           server: 'https://acme-v02.api.letsencrypt.org/directory',
+          // For test purposes to not be banned
           // server: 'https://acme-staging-v02.api.letsencrypt.org/directory',
           privateKeySecretRef: {
             name: 'cert-manager-acme-private-key'
@@ -66,7 +60,6 @@ export class Cert extends Construct {
     new Certificate(this, 'certificate', {
       metadata: {
         name: 'le-crt',
-        // namespace: ns.name,
       },
       spec: {
         secretName: 'tls-secret',
