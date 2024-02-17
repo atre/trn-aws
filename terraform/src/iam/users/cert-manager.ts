@@ -85,7 +85,7 @@ export class CertManagerIAMUserStack extends TerraformStack {
           condition: [{
             test: "StringEquals",
             variable: `${oidcUrl}:sub`,
-            values: ["system:serviceaccount:cert-manager:cert-manager"],
+            values: ["system:serviceaccount:default:cert-manager"],
           }],
         }],
       }).json,
