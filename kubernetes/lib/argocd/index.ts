@@ -127,7 +127,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -136,6 +135,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'
       },
       project: trnProject.name
     }
@@ -156,7 +156,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -165,6 +164,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'
       },
       project: trnProject.name
     }
@@ -181,7 +181,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -190,6 +189,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'
       },
       project: trnProject.name
     }
@@ -232,7 +232,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -241,6 +240,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'        
       },
       project: trnProject.name
     }
@@ -257,7 +257,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -266,6 +265,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'
       },
       project: trnProject.name
     }
@@ -334,7 +334,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -343,6 +342,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'
       },
       project: trnProject.name
     }
@@ -359,7 +359,6 @@ export class ArgoCD extends Construct {
           prune: true,
           selfHeal: true
         },
-        syncOptions: ['CreateNamespace=true']
       },
       source: {
         repoUrl: 'git@github.com:dromix/cicd.git',
@@ -368,6 +367,7 @@ export class ArgoCD extends Construct {
       },
       destination: {
         server: 'https://kubernetes.default.svc',
+        namespace: 'default'
       },
       project: trnProject.name
     }
