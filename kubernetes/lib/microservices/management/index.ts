@@ -26,7 +26,7 @@ export class Management extends Construct {
 
     new KubeDeployment(this, "deployment", {
       spec: {
-        replicas: 1,
+        replicas: 2,
         selector: {
           matchLabels: label,
         },
