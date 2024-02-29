@@ -82,7 +82,7 @@ export class ExternalSecrets extends Construct {
     super(scope, id);
 
     new Helm(this, 'install-external-secrets', {
-      chart: 'external-secrets/external-secrets',
+      chart: 'external-secrets',
       repo: 'https://charts.external-secrets.io',
       version: 'v0.9.13',
       values: {
