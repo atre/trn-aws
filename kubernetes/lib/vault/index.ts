@@ -83,6 +83,7 @@ export class ExternalSecrets extends Construct {
 
     new Helm(this, 'install-external-secrets', {
       chart: 'external-secrets/external-secrets',
+      repo: 'https://charts.external-secrets.io',
       version: 'v0.9.13',
       values: {
         installCRDs: true,

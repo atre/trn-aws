@@ -7,7 +7,6 @@ export class ExternalDns extends Construct {
 
     new Helm(this, 'externaldns', {
       chart: 'bitnami/external-dns',
-      repo: 'https://charts.bitnami.com/bitnami',
       version: '6.34.2',
       namespace: 'kube-system',
       values: {
