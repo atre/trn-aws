@@ -1,7 +1,8 @@
 import { Construct } from 'constructs';
 import { config } from 'dotenv';
-import { Certificate, ClusterIssuer } from '../../imports/cert-manager.io';
+import { Certificate, ClusterIssuer, Issuer } from '../../imports/cert-manager.io';
 import { Helm } from 'cdk8s';
+import { KubeSecret, KubeServiceAccount } from '../../imports/k8s';
 
 config();
 
@@ -30,6 +31,22 @@ export class Cert extends Construct {
       }
     });
 
+    new KubeServiceAccount(this, 'issuer-service-account', {
+      metadata: {
+        name: 'vault-issuer'
+      }
+    })
+
+    const secret = new KubeSecret(this, 'issuer-secret', {
+      metadata: {
+        name: 'issuer-token-lmzpj',
+        annotations: {
+          'kubernetes.io/service-account.name': 'vault-issuer',
+        },
+      },
+      type: 'kubernetes.io/service-account-token'
+    })
+
     new ClusterIssuer(this, 'cluster-issuer', {
       metadata: {
         name: 'cert-manager-acme-issuer',
@@ -37,9 +54,9 @@ export class Cert extends Construct {
       spec: {
         acme: {
           email: 'kalyuzhni.sergei@gmail.com',
-          server: 'https://acme-v02.api.letsencrypt.org/directory',
+          // server: 'https://acme-v02.api.letsencrypt.org/directory',
           // For test purposes to not be banned
-          // server: 'https://acme-staging-v02.api.letsencrypt.org/directory',
+          server: 'https://acme-staging-v02.api.letsencrypt.org/directory',
           privateKeySecretRef: {
             name: 'cert-manager-acme-private-key'
           },
@@ -57,6 +74,28 @@ export class Cert extends Construct {
       }
     });
 
+    new Issuer(this, 'issuer', {
+      metadata: {
+        name: 'vault-issuer'
+      },
+      spec: {
+        vault: {
+          server: process.env.vaultHost ?? '',
+          path: 'pki/sign/clickops',
+          auth: {
+            kubernetes: {
+              mountPath: '/v1/auth/kubernetes',
+              role: 'vault-issuer',
+              secretRef: {
+                name: secret.metadata.name ?? '',
+                key: 'token'
+              }
+            }
+          }
+        }
+      }
+    });
+
     new Certificate(this, 'certificate', {
       metadata: {
         name: 'le-crt',
@@ -67,6 +106,20 @@ export class Cert extends Construct {
         issuerRef: {
           name: 'cert-manager-acme-issuer',
           kind: 'ClusterIssuer'
+        },
+      }
+    });
+
+    new Certificate(this, 'vault-certificate', {
+      metadata: {
+        name: 'vault-clickops',
+      },
+      spec: {
+        secretName: 'clickops-tls',
+        dnsNames: ['www.clickops.life'],
+        commonName: 'www.clickops.life',
+        issuerRef: {
+          name: 'vault-issuer',
         },
       }
     });

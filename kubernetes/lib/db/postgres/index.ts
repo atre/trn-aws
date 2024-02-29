@@ -60,6 +60,7 @@ export class PostgresDatabase extends Construct {
       metadata: {
         name: "trn-postgres",
         labels: dbLabel,
+        namespace: dbNamespace.name
       },
       spec: {
         ports: [

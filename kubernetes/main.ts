@@ -11,6 +11,8 @@ import { TraefikApp } from './applications/traefik';
 import { GrafanaApp } from './applications/grafana';
 import { PrometheusApp } from './applications/prometheus';
 import { CertificateApp } from './applications/certificate';
+import { VaultApp } from './applications/vault';
+import { ExternalDnsApp } from './applications/external-dns';
 
 // GitOps
 new ArgoCDApp().synth();
@@ -39,4 +41,5 @@ new StorageApp().synth();
 
 // Security
 new CertificateApp().synth();
-
+new VaultApp().synth();
+new ExternalDnsApp().synth();

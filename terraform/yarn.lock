@@ -322,6 +322,11 @@
   resolved "https://registry.yarnpkg.com/@cdktf/provider-tls/-/provider-tls-10.0.0.tgz#b8c42ca650a075cfe925e495c99c027e00892e72"
   integrity sha512-iDrN4uMfm04elu8Ixb1fLTJmWJRh+IojMmKj8bUs00Ow/aYeqe97n6U4srMlO2/PfXzG5oonmJEOFreduI/1lg==
 
+"@cdktf/provider-vault@^12.2.0":
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/@cdktf/provider-vault/-/provider-vault-12.2.0.tgz#2d162d0388c31d0475d6567c576f8748f03e5dbb"
+  integrity sha512-qtC9IYC3haBWDbdzhasNOM8W4s/SL5AaZVqNyvUjVALDgj+82mBRXm+UG0eoGZq0nH1Lwz3dMX2b6SvoCdi1rg==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"

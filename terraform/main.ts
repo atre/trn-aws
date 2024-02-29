@@ -9,6 +9,8 @@ import { RemoteBackend } from './src/remote-backend';
 import { Vpc } from './src/vpc';
 import { Route53HostedZone } from './src/route53/hosted-zone';
 import { Route53RecordStack } from './src/route53/record';
+import { VaultConfigStack } from './src/vault';
+import { ExternalDnsIAMRoleStack } from './src/iam/users/external-dns';
 
 const app = new App();
 
@@ -70,9 +72,18 @@ new CertManagerIAMUserStack(app, 'cert-manager-iam-user', {
   clusterName: 'eks-cluster'
 });
 
+new ExternalDnsIAMRoleStack(app, 'external-dns-iam', {
+  clusterName: 'eks-cluster'
+})
+
 new Route53RecordStack(app, 'route53-record', {
   clusterName: 'eks-cluster',
   hostedZoneName: 'clickops.life'
+});
+
+
+new VaultConfigStack(app, 'vault-config', {
+  clusterName: 'eks-cluster'
 });
 
 app.synth();

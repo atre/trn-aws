@@ -65,6 +65,7 @@ export class CertManagerIAMUserStack extends TerraformStack {
 
     const thumbprint = tlsCertificate.certificates.get(0).sha1Fingerprint;
 
+    // TODO Extract creating OIDC provider
     const cluster = new IamOpenidConnectProvider(this, 'oidc-provider', {
       clientIdList: ['sts.amazonaws.com'],
       url: oidcIssuer,

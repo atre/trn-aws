@@ -31,8 +31,24 @@ export class Management extends Construct {
           matchLabels: label,
         },
         template: {
-          metadata: { labels: label },
+          metadata: { labels: label, 
+            annotations: {
+              'reloader.stakater.com/auto': "true",
+              'reloader.stakater.com/reload': "postgres-secret",
+              'vault.hashicorp.com/agent-inject': 'true',
+              'vault.hashicorp.com/role': 'secret-manager',
+              'vault.hashicorp.com/agent-inject-secret-envvars': 'trn/data/postgres/config',
+              'vault.hashicorp.com/agent-inject-template-db-config': `
+              {{- with secret "trn/data/postgres/config" -}}
+              {{- range $k, $v := .Data.data }}
+              {{ $k }}="{{ $v }}"
+              {{- end }}
+              {{- end }}
+            `
+            }
+          },
           spec: {
+            serviceAccountName: 'secret-manager',
             initContainers: [
               {
                 name: "migration",
@@ -42,10 +58,16 @@ export class Management extends Construct {
                 env: [
                   // TODO move to secret
                   { name: "SERVER_PORT", value: "8079"},
-                  { name: "DB_USER", value: "postgres" },
+                  {
+                    name: "DB_USER",
+                    valueFrom: { secretKeyRef: { name: "postgres-secret", key: "DB_USER" } },
+                  },                  
                   { name: "DB_PORT", value: "5432" },
                   { name: "DB_HOST", value: "trn-postgres.db.svc.cluster.local" },
-                  { name: "DB_PASSWORD", value: "postgres" },
+                  {
+                    name: "DB_PASSWORD",
+                    valueFrom: { secretKeyRef: { name: "postgres-secret", key: "DB_PASSWORD" } },
+                  },                  
                   { name: "DB_NAME", value: "postgres" },
                   { name: "AUTH_SECRET", value: "secret" },
                   // Other necessary environment variables
@@ -60,10 +82,16 @@ export class Management extends Construct {
                 ports: [{ containerPort: servicePort }],
                 env: [
                   { name: "SERVER_PORT", value: "8079"},
-                  { name: "DB_USER", value: "postgres" },
+                  {
+                    name: "DB_USER",
+                    valueFrom: { secretKeyRef: { name: "postgres-secret", key: "DB_USER" } },
+                  },                   
                   { name: "DB_PORT", value: "5432" },
                   { name: "DB_HOST", value: "trn-postgres.db.svc.cluster.local" },
-                  { name: "DB_PASSWORD", value: "postgres" },
+                  {
+                    name: "DB_PASSWORD",
+                    valueFrom: { secretKeyRef: { name: "postgres-secret", key: "DB_PASSWORD" } },
+                  },                    
                   { name: "DB_NAME", value: "postgres" },
                   { name: "AUTH_SECRET", value: "secret" },
                   { name: "MY_POD_NAME", valueFrom: { fieldRef: { fieldPath: "metadata.name" } } },

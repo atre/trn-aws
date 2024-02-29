@@ -26,6 +26,7 @@
     "@cdktf/provider-helm": "^9.0.2",
     "@cdktf/provider-kubernetes": "^10.0.1",
     "@cdktf/provider-tls": "^10.0.0",
+    "@cdktf/provider-vault": "^12.2.0",
     "@sinclair/typebox": "^0.31.28",
     "cdktf": "^0.19.2",
     "constructs": "^10.3.0",

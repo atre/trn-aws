@@ -1,0 +1,13 @@
+# Assuming your service account name is 'vault-issuer' and it's in the 'default' namespace
+SERVICE_ACCOUNT_NAME=vault-issuer
+NAMESPACE=default
+
+# Get the Secret associated with the service account
+SECRET=$(kubectl get serviceaccount $SERVICE_ACCOUNT_NAME -n $NAMESPACE -o jsonpath="{.secrets[0].name}")
+
+# Get the JWT token from the Secret
+JWT_TOKEN=$(kubectl get secret $SECRET -n $NAMESPACE -o jsonpath="{.data.token}" | base64 --decode)
+echo $JWT_TOKEN
+
+
+vault login -method=kubernetes role=vault-issuer jwt=eyJhbGciOiJSUzI1NiIsImtpZCI6Ik9vNER2cldSZWVaQ0dIN05mUFFBcDdKYkxTa3NBSEhkbndKZkRONTN1SEEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Imlzc3Vlci10b2tlbi1sbXpwaiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJ2YXVsdC1pc3N1ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJlZTNmNjM5YS0xMjNlLTRlYWItYjdhZC02MGVlYzliYjFlZWYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDp2YXVsdC1pc3N1ZXIifQ.fxKjS9nasrUnC0Xv5OVTG09-3213HlT9t35oR5NG3YexI8C1hQrBWZZR7cRoMHFeyzQgQ_I2i7r0aCcfjm3HFkLeAzdgrAgcyNjC_cAjH4hrVpSZhVjRGtE1krUbbHZncGf7RHXsrbqF1EStyqNsEUEO-8OSxqhQXo6VK-INyG3AZtwnHEbhRN1ap1n81Tdcv-6egldJavx7C3LJqfn718hZ2kncQpVaYBa6bhvxO1WB4z6TaXsr5eKA12xD7rW0QyS-_ja5T_vKLD3Qqkiar5VLmRq9ua8UvwkYHyBWLa4yESwVS3GPrMngYbCE2jMC9oHVF3GamEP03w-QLDskuQ
