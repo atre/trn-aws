@@ -80,7 +80,8 @@ export class Cert extends Construct {
       },
       spec: {
         vault: {
-          server: process.env.vaultHost ?? '',
+          // server: process.env.vaultHost ?? '',
+          server: 'http://vault-helm-vault-c821b46d.default.svc.cluster.local:8200',
           path: 'pki/sign/clickops',
           auth: {
             kubernetes: {

@@ -95,7 +95,8 @@ export class ExternalSecrets extends Construct {
       spec: {
         provider: {
           vault: {
-            server: process.env.vaultHost ?? '',
+            // server: process.env.vaultHost ?? '',
+          server: 'http://vault-helm-vault-c821b46d.default.svc.cluster.local:8200',
             path: 'trn',
             version: SecretStoreSpecProviderVaultVersion.V2,
             auth: {
